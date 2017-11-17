@@ -413,7 +413,17 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             model.addRow(row);
         }
     }//GEN-LAST:event_teacherIDSearchButtonActionPerformed
+    private void studentResetButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        showStudents();
+    }                                                  
 
+    private void teacherResetButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
+        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+        model.setRowCount(0);
+        showTeachers();
+    }
     /**
      * @param args the command line arguments
      */
