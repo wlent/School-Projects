@@ -44,8 +44,6 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     public ArrayList<Student> studentList(){ //creates an ArrayList based on the student table
         ArrayList<Student> list = new ArrayList<>();
         try{
-            //Class.forName("com.mysql.jdbc.Driver");
-            //Connection con = DriverManager.getConnection(URL);
             Connection con = getConnection();
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Student");
@@ -65,8 +63,6 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     public ArrayList<Teacher> teacherList(){ //creates an ArrayList based on the teacher table
         ArrayList<Teacher> list = new ArrayList<>();
         try{
-            //Class.forName("com.mysql.jdbc.Driver");
-            //Connection con = DriverManager.getConnection(URL);
             Connection con = getConnection();
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Teacher");
@@ -86,8 +82,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     public ArrayList<FocusReport> FocusReportList(){ //creates an ArrayList based on the FocusReport table
         ArrayList<FocusReport> list = new ArrayList<>();
         try{
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection(URL);
+            Connection con = getConnection();
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Focus_Report");
         
@@ -366,8 +361,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         ArrayList<Student> list = new ArrayList<Student>();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         try{
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://triton.towson.edu:3360/wlent1db", "wlent1", "Cosc*8pcy");
+            Connection con = getConnection();
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Student WHERE S_ID = " + studentIDTextField.getText());
         
@@ -396,8 +390,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         ArrayList<Teacher> list = new ArrayList<Teacher>();
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         try{
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection(URL);
+            Connection con = getConnection();
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Teacher WHERE T_ID = " + teacherIDTextField.getText());
         
