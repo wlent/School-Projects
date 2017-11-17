@@ -31,7 +31,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     public Connection getConnection(){
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://triton.towson.edu:3360/wlent1db", "wlent1", "Cosc*8pcy");
+            Connection con = DriverManager.getConnection(URL);
             return con;
         }
         
@@ -45,7 +45,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         ArrayList<Student> list = new ArrayList<>();
         try{
             //Class.forName("com.mysql.jdbc.Driver");
-            //Connection con = DriverManager.getConnection("jdbc:mysql://triton.towson.edu:3360/wlent1db", "wlent1", "Cosc*8pcy");
+            //Connection con = DriverManager.getConnection(URL);
             Connection con = getConnection();
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Student");
@@ -66,7 +66,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         ArrayList<Teacher> list = new ArrayList<>();
         try{
             //Class.forName("com.mysql.jdbc.Driver");
-            //Connection con = DriverManager.getConnection("jdbc:mysql://triton.towson.edu:3360/wlent1db", "wlent1", "Cosc*8pcy");
+            //Connection con = DriverManager.getConnection(URL);
             Connection con = getConnection();
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Teacher");
@@ -87,7 +87,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         ArrayList<FocusReport> list = new ArrayList<>();
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://triton.towson.edu:3360/wlent1db", "wlent1", "Cosc*8pcy");
+            Connection con = DriverManager.getConnection(URL);
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Focus_Report");
         
@@ -397,7 +397,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://triton.towson.edu:3360/wlent1db", "wlent1", "Cosc*8pcy");
+            Connection con = DriverManager.getConnection(URL);
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Teacher WHERE T_ID = " + teacherIDTextField.getText());
         
