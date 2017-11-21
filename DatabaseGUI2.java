@@ -485,7 +485,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         try{
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Teacher WHERE T_ID LIKE '" + teacherIDTextField.getText() + "%'");
-            // Hello Lola was here
+        
             while(rs.next()){
                 Teacher teacher = new Teacher(rs.getString("T_ID"), rs.getString("F_Name"), rs.getString("L_Name"), rs.getString("Subject"));
                 list.add(teacher);
@@ -521,14 +521,17 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private void focusReportSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_focusReportSearchButtonActionPerformed
         ArrayList<FocusReport> list = new ArrayList<FocusReport>();
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
-        /*try{
-            Connection con = getConnection();
+        try{
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM Teacher WHERE T_ID = " + teacherIDTextField.getText());
+            ResultSet rs = st.executeQuery("SELECT * FROM Focus_Report WHERE S_ID = " + jTextField1.getText());
         
             while(rs.next()){
-                Teacher teacher = new Teacher(rs.getString("T_ID"), rs.getString("F_Name"), rs.getString("L_Name"), rs.getString("Subject"));
-                list.add(teacher);
+                FocusReport focusreport = new FocusReport(rs.getString("S_ID"), 
+                        rs.getString("T_ID"), rs.getString("Time_In"), 
+                        rs.getString("Time_Out"), rs.getString("Date"), 
+                        rs.getString("Teacher_Description"), rs.getString("Student_Response"), 
+                        rs.getString("Type"), rs.getString("Comm_Leader_Debrief"));
+                list.add(focusreport);
             }
         }
         
@@ -536,14 +539,19 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             System.out.println("Error");
         }
         model.setRowCount(0);
-        Object row[] = new Object[5];
+        Object row[] = new Object[9];
         for(int i = 0; i < list.size(); i++){
-            row[0] = list.get(i).getT_ID();
-            row[1] = list.get(i).getF_Name();
-            row[2] = list.get(i).getL_Name();
-            row[3] = list.get(i).getSubject();
+            row[0] = list.get(i).getS_ID();
+            row[1] = list.get(i).getT_ID();
+            row[2] = list.get(i).getTime_In();
+            row[3] = list.get(i).getTime_Out();
+            row[4] = list.get(i).getDate();
+            row[5] = list.get(i).getTeacher_Description();
+            row[6] = list.get(i).getStudent_Response();
+            row[7] = list.get(i).getType();
+            row[8] = list.get(i).getComm_Leader_Debrief();
             model.addRow(row);
-        }*/
+        }
     }//GEN-LAST:event_focusReportSearchButtonActionPerformed
 
     /**
