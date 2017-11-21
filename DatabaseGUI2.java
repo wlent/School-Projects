@@ -485,7 +485,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         try{
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Teacher WHERE T_ID LIKE '" + teacherIDTextField.getText() + "%'");
-        
+            // Hello Lola was here
             while(rs.next()){
                 Teacher teacher = new Teacher(rs.getString("T_ID"), rs.getString("F_Name"), rs.getString("L_Name"), rs.getString("Subject"));
                 list.add(teacher);
