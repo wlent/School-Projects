@@ -3,13 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package databaseproject2;
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -21,19 +24,22 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     /**
      * Creates new form DatabaseGUI2
      */
-    public DatabaseGUI2() {
+    public DatabaseGUI2() throws SQLException {
         initComponents();
         showStudents();
         showTeachers();
         showFocusReports();
+        showCommunities();
+        showHomerooms();
+        showMedication();
     }
     
     
     public Connection getConnection(){
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection();
-            return con;
+            Connection connection = DriverManager.getConnection("jdbc:mysql://triton.towson.edu:3360/wlent1db", "wlent1", "Cosc*8pcy");
+            return connection;
         }
         
         catch(Exception e){
@@ -102,16 +108,88 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         return list;
     }
     
-    public final void showStudents(){ //displays the full student table
+    public ArrayList<Community> CommunityList(){ //creates an ArrayList based on the Community table
+        ArrayList<Community> list = new ArrayList<>();
+        try{
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM Community");
+        
+            while(rs.next()){
+                Community community = new Community(rs.getString("Community_Name"), rs.getString("Leader_ID"));
+                list.add(community);
+            }
+        }
+        
+        catch(Exception e){
+            System.out.println("Error");
+        }
+        return list;
+    }
+    
+    public ArrayList<Homeroom> HomeroomList(){ //creates an ArrayList based on the Homeroom table
+        ArrayList<Homeroom> list = new ArrayList<>();
+        try{
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM Homeroom");
+        
+            while(rs.next()){
+                Homeroom hr = new Homeroom(rs.getString("Room_No"), rs.getString("T_ID"), rs.getString("Community"));
+                list.add(hr);
+            }
+        }
+        
+        catch(Exception e){
+            System.out.println("Error");
+        }
+        return list;
+    }
+    
+    public ArrayList<Medication> MedicationList(){ //creates an ArrayList based on the Medication table
+        ArrayList<Medication> list = new ArrayList<>();
+        try{
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM Medication");
+        
+            while(rs.next()){
+                Medication med = new Medication(rs.getString("S_ID"), rs.getString("Clinical_Name"), 
+                rs.getString("Brand_Name"), rs.getString("Dosage"), rs.getString("Side_Effects"),
+                rs.getString("ADM_HS"), rs.getString("M_ID"));
+                list.add(med);
+            }
+        }
+        
+        catch(Exception e){
+            System.out.println("Error");
+        }
+        return list;
+    }
+    
+    public final void showStudents() throws SQLException{ //displays the full student table
         ArrayList<Student> list = studentList();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        Object row[] = new Object[5];
+        
+        Object row[] = new Object[6];
         for(int i = 0; i < list.size(); i++){
+            try{
+                String studentToCount = list.get(i).getS_ID();
+                Statement st = con.createStatement();
+                ResultSet count = st.executeQuery("SELECT COUNT(S_ID) AS COUNT_SID " +
+                                                "FROM Focus_Report " +
+                                                "WHERE S_ID = " + studentToCount);
+                if(count.first()){
+                    row[5] = count.getString("COUNT_SID");
+                }
+            }
+        
+            catch(Exception e){
+                System.out.println("Error with count");
+                }   
             row[0] = list.get(i).getS_ID();
             row[1] = list.get(i).getF_Name();
             row[2] = list.get(i).getL_Name();
             row[3] = list.get(i).getDOB();
             row[4] = list.get(i).getRoom_No();
+
             model.addRow(row);
         }
     }
@@ -143,6 +221,49 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             row[6] = list.get(i).getStudent_Response();
             row[7] = list.get(i).getType();
             row[8] = list.get(i).getComm_Leader_Debrief();
+            model.addRow(row);
+        }
+    }
+    
+    public final void showCommunities(){ //displays the full community table
+        ArrayList<Community> list = CommunityList();
+        DefaultTableModel model = (DefaultTableModel) jTable4.getModel();
+        Object row[] = new Object[3];
+        for(int i = 0; i < list.size(); i++){
+            row[0] = list.get(i).getCommunityName();
+            row[1] = list.get(i).getLeaderID();
+            row[2] = null;
+            
+            model.addRow(row);
+        }
+    }
+    
+    public final void showHomerooms(){ //displays the full homeroom table
+        ArrayList<Homeroom> list = HomeroomList();
+        DefaultTableModel model = (DefaultTableModel) jTable5.getModel();
+        Object row[] = new Object[4];
+        for(int i = 0; i < list.size(); i++){
+            row[0] = list.get(i).getRoomNo();
+            row[1] = list.get(i).getTID();
+            row[2] = list.get(i).getCommunity();
+            row[3] = null;
+            
+            model.addRow(row);
+        }
+    }
+    
+    public final void showMedication(){ //displays the full medication table
+        ArrayList<Medication> list = MedicationList();
+        DefaultTableModel model = (DefaultTableModel) jTable6.getModel();
+        Object row[] = new Object[7];
+        for(int i = 0; i < list.size(); i++){
+            row[0] = list.get(i).getSID();
+            row[1] = list.get(i).getClinicalName();
+            row[2] = list.get(i).getBrandName();
+            row[3] = list.get(i).getDosage();
+            row[4] = list.get(i).getSideEffects();
+            row[5] = list.get(i).getADMHS();
+            row[6] = list.get(i).getMID();
             model.addRow(row);
         }
     }
@@ -185,7 +306,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         jTable4 = new javax.swing.JTable();
         homeroomPanel = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        homeroomTeacherIDTextField = new javax.swing.JTextField();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jTable5 = new javax.swing.JTable();
         medicationPanel = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        studentIDMedicationtextField = new javax.swing.JTextField();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        jTable6 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -196,7 +325,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Student ID", "First Name", "Last Name", "D.O.B.", "Homeroom"
+                "Student ID", "First Name", "Last Name", "D.O.B.", "Homeroom", "# of Focus Reports"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -405,28 +534,89 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Community", communityPanel);
 
+        jLabel6.setText("Teacher ID");
+
+        homeroomTeacherIDTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homeroomTeacherIDTextFieldActionPerformed(evt);
+            }
+        });
+
+        jTable5.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Room Number", "Teacher", "Community", "Number of Focus Rooms"
+            }
+        ));
+        jScrollPane5.setViewportView(jTable5);
+
         javax.swing.GroupLayout homeroomPanelLayout = new javax.swing.GroupLayout(homeroomPanel);
         homeroomPanel.setLayout(homeroomPanelLayout);
         homeroomPanelLayout.setHorizontalGroup(
             homeroomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 933, Short.MAX_VALUE)
+            .addGroup(homeroomPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(homeroomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(homeroomPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(homeroomTeacherIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(512, Short.MAX_VALUE))
         );
         homeroomPanelLayout.setVerticalGroup(
             homeroomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 619, Short.MAX_VALUE)
+            .addGroup(homeroomPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(homeroomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(homeroomTeacherIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(160, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Homeroom", homeroomPanel);
+
+        jLabel7.setText("Student ID");
+
+        jTable6.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Student ID", "Clinical Name", "Brand Name", "Dosage", "Side Effects", "Adminstered", "Medication ID"
+            }
+        ));
+        jScrollPane6.setViewportView(jTable6);
 
         javax.swing.GroupLayout medicationPanelLayout = new javax.swing.GroupLayout(medicationPanel);
         medicationPanel.setLayout(medicationPanelLayout);
         medicationPanelLayout.setHorizontalGroup(
             medicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 933, Short.MAX_VALUE)
+            .addGroup(medicationPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(medicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 953, Short.MAX_VALUE)
+                    .addGroup(medicationPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(studentIDMedicationtextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         medicationPanelLayout.setVerticalGroup(
             medicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 619, Short.MAX_VALUE)
+            .addGroup(medicationPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(medicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(studentIDMedicationtextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(160, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Medication", medicationPanel);
@@ -468,8 +658,22 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             System.out.println("Error");
         }
         model.setRowCount(0);
-        Object row[] = new Object[5];
+        Object row[] = new Object[6];
         for(int i = 0; i < list.size(); i++){
+            try{
+                String studentToCount = list.get(i).getS_ID();
+                Statement st = con.createStatement();
+                ResultSet count = st.executeQuery("SELECT COUNT(S_ID) AS COUNT_SID " +
+                                                "FROM Focus_Report " +
+                                                "WHERE S_ID = " + studentToCount);
+                if(count.first()){
+                    row[5] = count.getString("COUNT_SID");
+                }
+            }
+        
+            catch(Exception e){
+                System.out.println("Error with count");
+                } 
             row[0] = list.get(i).getS_ID();
             row[1] = list.get(i).getF_Name();
             row[2] = list.get(i).getL_Name();
@@ -509,7 +713,11 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private void studentResetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_studentResetButtonActionPerformed
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
-        showStudents();
+        try {
+            showStudents();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_studentResetButtonActionPerformed
 
     private void teacherResetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_teacherResetButtonActionPerformed
@@ -554,6 +762,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_focusReportSearchButtonActionPerformed
 
+    private void homeroomTeacherIDTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeroomTeacherIDTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_homeroomTeacherIDTextFieldActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -584,7 +796,11 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new DatabaseGUI2().setVisible(true);
+                try {
+                    new DatabaseGUI2().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -594,24 +810,32 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private javax.swing.JButton focusReportSearchButton;
     private javax.swing.JPanel focusReportsPanel;
     private javax.swing.JPanel homeroomPanel;
+    private javax.swing.JTextField homeroomTeacherIDTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
+    private javax.swing.JTable jTable5;
+    private javax.swing.JTable jTable6;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JPanel medicationPanel;
+    private javax.swing.JTextField studentIDMedicationtextField;
     private javax.swing.JButton studentIDSearchButton;
     private javax.swing.JTextField studentIDTextField;
     private javax.swing.JButton studentResetButton;
