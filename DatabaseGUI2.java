@@ -45,7 +45,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     public Connection getConnection(){
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://triton.towson.edu:3360/wlent1db", "wlent1", "Cosc*8pcy");
+            Connection connection = DriverManager.getConnection(URL);
             return connection;
         }
         
