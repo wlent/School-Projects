@@ -45,7 +45,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     public Connection getConnection(){
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection(URL);
+            Connection connection = DriverManager.getConnection("jdbc:mysql://triton.towson.edu:3360/wlent1db", "wlent1", "Cosc*8pcy");
             return connection;
         }
         
@@ -873,7 +873,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) focusReportsTable.getModel();
         try{
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM Focus_Report WHERE S_ID = " + jTextField1.getText());
+            ResultSet rs = st.executeQuery("SELECT * FROM Focus_Report WHERE S_ID LIKE '" + jTextField1.getText() + "%'");
         
             while(rs.next()){
                 FocusReport focusreport = new FocusReport(rs.getString("S_ID"), 
@@ -1020,9 +1020,12 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
       JTextField timeOutField = new JTextField(15);
       JTextField dateField = new JTextField(15);
       JTextArea teacherDescriptionArea = new JTextArea(5, 20);
+      teacherDescriptionArea.setLineWrap(true);
       JTextArea studentResponseArea = new JTextArea(5, 20);
+      studentResponseArea.setLineWrap(true);
       JTextField typeField = new JTextField(9);
       JTextArea commLeaderDebriefArea = new JTextArea(5, 20);
+      commLeaderDebriefArea.setLineWrap(true);
       
       JPanel myPanel = new JPanel();
       myPanel.add(new JLabel("Student ID:"));
