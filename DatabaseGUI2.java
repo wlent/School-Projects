@@ -5,6 +5,7 @@
  */
 
 
+import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -30,6 +31,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
     /**
      * Creates new form DatabaseGUI2
+     * @throws java.sql.SQLException
      */
     public DatabaseGUI2() throws SQLException {
         initComponents();
@@ -42,23 +44,23 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     }
     
     
-    public Connection getConnection(){
-        try{
+    public Connection getConnection(){ //this currently stays open as long as you have the app running
+        try{                           //might want to close it and reopen for each method 
             Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://triton.towson.edu:3360/wlent1db", "wlent1", "Cosc*8pcy");
             return connection;
         }
         
-        catch(Exception e){
+        catch(ClassNotFoundException | SQLException e){
             System.out.println("Could not connect to database.");
         }
         return null;
     }
     
-    private Connection con = getConnection();
+    private final Connection con = getConnection();
     
     
-    public ArrayList<Student> studentList() throws SQLException{ //creates an ArrayList based on the student table
+    public ArrayList<Student> studentList() throws SQLException{ //creates an ArrayList based on the student table in mysql
         ArrayList<Student> list = new ArrayList<>();
         Statement st = null;
         ResultSet rs = null;
@@ -67,7 +69,8 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             rs = st.executeQuery("SELECT * FROM Student");
         
             while(rs.next()){
-                Student student = new Student(rs.getString("S_ID"), rs.getString("F_Name"), rs.getString("L_Name"), rs.getString("DOB"), rs.getString("Room_No"));
+                Student student = new Student(rs.getString("S_ID"), rs.getString("F_Name"), 
+                        rs.getString("L_Name"), rs.getString("DOB"), rs.getString("Room_No"));
                 list.add(student);
             }
         }
@@ -77,20 +80,23 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         }
         
         finally{
-            rs.close();
-            st.close();
+            if(rs != null) rs.close();
+            if(st != null) st.close();
         }
         return list;
     }
     
-    public ArrayList<Teacher> teacherList(){ //creates an ArrayList based on the teacher table
+    public ArrayList<Teacher> teacherList() throws SQLException{ //creates an ArrayList based on the teacher table
         ArrayList<Teacher> list = new ArrayList<>();
+        Statement st = null;
+        ResultSet rs = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM Teacher");
+            st = con.createStatement();
+            rs = st.executeQuery("SELECT * FROM Teacher");
         
             while(rs.next()){
-                Teacher teacher = new Teacher(rs.getString("T_ID"), rs.getString("F_Name"), rs.getString("L_Name"), rs.getString("Subject"));
+                Teacher teacher = new Teacher(rs.getString("T_ID"), rs.getString("F_Name"), 
+                        rs.getString("L_Name"), rs.getString("Subject"));
                 list.add(teacher);
             }
         }
@@ -98,14 +104,20 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         catch(Exception e){
             System.out.println("Error");
         }
+        finally{
+            if(rs != null) rs.close();
+            if(st != null) st.close();
+        }
         return list;
     }
     
-    public ArrayList<FocusReport> FocusReportList(){ //creates an ArrayList based on the FocusReport table
+    public ArrayList<FocusReport> FocusReportList() throws SQLException{ //creates an ArrayList based on the FocusReport table
         ArrayList<FocusReport> list = new ArrayList<>();
+        Statement st = null;
+        ResultSet rs = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM Focus_Report");
+            st = con.createStatement();
+            rs = st.executeQuery("SELECT * FROM Focus_Report");
         
             while(rs.next()){
                 FocusReport report = new FocusReport(rs.getString("S_ID"), rs.getString("T_ID"), 
@@ -119,14 +131,20 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         catch(Exception e){
             System.out.println("Error");
         }
+        finally{
+            if(rs != null) rs.close();
+            if(st != null) st.close();
+        }
         return list;
     }
     
-    public ArrayList<Community> CommunityList(){ //creates an ArrayList based on the Community table
+    public ArrayList<Community> CommunityList() throws SQLException{ //creates an ArrayList based on the Community table
         ArrayList<Community> list = new ArrayList<>();
+        Statement st = null;
+        ResultSet rs = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM Community");
+            st = con.createStatement();
+            rs = st.executeQuery("SELECT * FROM Community");
         
             while(rs.next()){
                 Community community = new Community(rs.getString("Community_Name"), rs.getString("Leader_ID"));
@@ -137,14 +155,20 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         catch(Exception e){
             System.out.println("Error");
         }
+        finally{
+            if(rs != null) rs.close();
+            if(st != null) st.close();
+        }
         return list;
     }
     
-    public ArrayList<Homeroom> HomeroomList(){ //creates an ArrayList based on the Homeroom table
+    public ArrayList<Homeroom> HomeroomList() throws SQLException{ //creates an ArrayList based on the Homeroom table
         ArrayList<Homeroom> list = new ArrayList<>();
+        Statement st = null;
+        ResultSet rs = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM Homeroom");
+            st = con.createStatement();
+            rs = st.executeQuery("SELECT * FROM Homeroom");
         
             while(rs.next()){
                 Homeroom hr = new Homeroom(rs.getString("Room_No"), rs.getString("T_ID"), rs.getString("Community"));
@@ -155,26 +179,40 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         catch(Exception e){
             System.out.println("Error");
         }
+        
+        finally{
+            if(rs != null) rs.close();
+            if(st != null) st.close();
+        }
+        
         return list;
     }
     
-    public ArrayList<Medication> MedicationList(){ //creates an ArrayList based on the Medication table
+    public ArrayList<Medication> MedicationList() throws SQLException{ //creates an ArrayList based on the Medication table
         ArrayList<Medication> list = new ArrayList<>();
+        Statement st = null;
+        ResultSet rs = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM Medication");
+            st = con.createStatement();
+            rs = st.executeQuery("SELECT * FROM Medication");
         
             while(rs.next()){
                 Medication med = new Medication(rs.getString("S_ID"), rs.getString("Clinical_Name"), 
-                rs.getString("Brand_Name"), rs.getString("Dosage"), rs.getString("Side_Effects"),
+                rs.getString("Brand Name"), rs.getString("Dosage"), rs.getString("Side_Effects"),
                 rs.getString("ADM_HS"), rs.getString("M_ID"));
                 list.add(med);
             }
         }
         
         catch(Exception e){
-            System.out.println("Error");
+            System.out.println("Error with meds");
         }
+        
+        finally{
+            if(rs != null) rs.close();
+            if(st != null) st.close();
+        }
+        
         return list;
     }
     
@@ -224,7 +262,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         Statement st = null;
         ResultSet count = null;
         for(int i = 0; i < list.size(); i++){
-            try{
+            try{ //try-catch to display the count of focus reports
                 String teacherToCount = list.get(i).getT_ID();
                 st = con.createStatement();
                 count = st.executeQuery("SELECT COUNT(T_ID) AS COUNT_TID " +
@@ -292,7 +330,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 }
             finally{
                 if(rs != null)rs.close();
-                st.close();
+                if(st != null)st.close();
             }
             row[0] = list.get(i).getCommunityName();
             row[1] = list.get(i).getLeaderID();
@@ -306,11 +344,11 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         ArrayList<Homeroom> list = HomeroomList();
         DefaultTableModel model = (DefaultTableModel) homeroomTable.getModel();
         ResultSet rs = null;
-        
+        Statement st = null;
         Object row[] = new Object[4];
         for(int i = 0; i < list.size(); i++){
             try{
-                Statement st = con.createStatement();
+                st = con.createStatement();
                 rs = st.executeQuery("SELECT COUNT(Room_No) AS COUNT_R " +
                                             "FROM Focus_Report f, Student s " +
                                             "WHERE f.S_ID = s.S_ID " + 
@@ -322,6 +360,12 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             catch(Exception e){
             
             }
+            
+            finally{
+            if(rs != null) rs.close();
+            if(st != null) st.close();
+            }
+            
             row[0] = list.get(i).getRoomNo();
             row[1] = list.get(i).getTID();
             row[2] = list.get(i).getCommunity();
@@ -329,7 +373,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         }
     }
     
-    public final void showMedication(){ //displays the full medication table
+    public final void showMedication() throws SQLException{ //displays the full medication table
         ArrayList<Medication> list = MedicationList();
         DefaultTableModel model = (DefaultTableModel) medicationTable.getModel();
         Object row[] = new Object[7];
@@ -765,9 +809,11 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private void studentIDSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_studentIDSearchButtonActionPerformed
         ArrayList<Student> list = new ArrayList<>();
         DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
+        Statement st = null;
+        ResultSet rs = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM Student WHERE S_ID LIKE '" 
+            st = con.createStatement();
+            rs = st.executeQuery("SELECT * FROM Student WHERE S_ID LIKE '" 
                     + studentIDTextField.getText() + "%'");
         
             while(rs.next()){
@@ -777,15 +823,28 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             }
         }
         
-        catch(Exception e){
+        catch(SQLException e){
             System.out.println("Error");
+        }
+        
+        finally{
+            if(rs != null) try {
+                rs.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if(st != null) try {
+                st.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         model.setRowCount(0);
         Object row[] = new Object[6];
         for(int i = 0; i < list.size(); i++){
             try{
                 String studentToCount = list.get(i).getS_ID();
-                Statement st = con.createStatement();
+                st = con.createStatement();
                 ResultSet count = st.executeQuery("SELECT COUNT(S_ID) AS COUNT_SID " +
                                                 "FROM Focus_Report " +
                                                 "WHERE S_ID = " + studentToCount);
@@ -1082,7 +1141,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
              ps.executeUpdate();
              JOptionPane.showMessageDialog(null, "Success");
          }
-        catch(Exception e){
+        catch(HeadlessException | SQLException e){
              JOptionPane.showMessageDialog(null, "Please check all fields and try again.");
         }
         finally{
