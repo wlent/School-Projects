@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -41,13 +42,24 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         showCommunities();
         showHomerooms();
         showMedication();
+        sort_student_table();       
+        sort_teacher_table();      
+        sort_focusreport_table();       
+        sort_community_table();      
+        sort_homeroom_table();
+        sort_medication_table();
+        printHrMostFr();
+        printTeacherMostFr();
+        printStudentMostFr();
+        printCommunityMostFr();
     }
     
     
     public Connection getConnection(){ //this currently stays open as long as you have the app running
         try{                           //might want to close it and reopen for each method 
             Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("put info for connecting to database here");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://triton.towson.edu:3360/wlent1db",
+                    "wlent1", "Cosc*8pcy");
             return connection;
         }
         
@@ -59,6 +71,118 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     
     private final Connection con = getConnection();
     
+    public void printHrMostFr() throws SQLException{
+        String query = "SELECT Room_No\n" +
+                        "FROM Focus_Report, Student\n" +
+                        "WHERE Focus_Report.S_ID = Student.S_ID\n" +
+                        "GROUP BY Room_No\n" +
+                        "HAVING COUNT(Student.S_ID) >=(SELECT MAX(COUNT_SID) AS MAX_COUNT\n" +
+                        "FROM (SELECT Room_No, COUNT(Student.S_ID) AS COUNT_SID\n" +
+                        "FROM Focus_Report, Student\n" +
+                        "WHERE Focus_Report.S_ID = Student.S_ID\n" +
+                        "GROUP BY Room_No) AS A)\n";
+        Statement st = null;
+        ResultSet rs = null;
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+            if(rs.first()){
+                homeroomMaxFrTextField.setText(rs.getString("Room_No"));
+            }
+        }
+        catch(Exception e){
+            
+        }
+        finally{
+            if(st != null) st.close();
+            if(rs != null) rs.close();
+        }
+    }
+    
+    public void printTeacherMostFr() throws SQLException{
+        String query = "SELECT F_Name, L_Name, fr.T_ID, COUNT(fr.T_ID) AS COUNT_TID\n" +
+                        "FROM Focus_Report as fr, Teacher as t\n" +
+                        "WHERE fr.T_ID = t.T_ID\n" +
+                        "GROUP BY fr.T_ID\n" +
+                        "HAVING COUNT_TID >= (SELECT MAX(COUNT_TID) AS MAX_COUNT\n" +
+                        "FROM(SELECT T_ID, COUNT(T_ID) AS COUNT_TID\n" +
+                        "FROM Focus_Report\n" +
+                        "GROUP BY T_ID) AS A);";
+        Statement st = null;
+        ResultSet rs = null;
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+            if(rs.first()){
+                teacherMostFrTextField.setText(rs.getString("T_ID"));
+                teacherNameMostFrTextField.setText(rs.getString("F_Name") + " " + rs.getString("L_Name"));
+            }
+        }
+        catch(Exception e){
+            
+        }
+        finally{
+            if(st != null) st.close();
+            if(rs != null) rs.close();
+        }
+    }
+    
+    public void printStudentMostFr() throws SQLException{
+        String query = "SELECT F_Name, L_Name, fr.S_ID, COUNT(fr.S_ID) AS COUNT_SID\n" +
+                        "FROM Focus_Report as fr, Student as s\n" +
+                        "WHERE fr.S_ID = s.S_ID\n" +
+                        "GROUP BY fr.S_ID\n" +
+                        "HAVING COUNT_SID >= (SELECT MAX(COUNT_SID) AS MAX_COUNT\n" +
+                        "FROM(SELECT S_ID, COUNT(S_ID) AS COUNT_SID\n" +
+                        "FROM Focus_Report\n" +
+                        "GROUP BY S_ID) AS A);";
+        Statement st = null;
+        ResultSet rs = null;
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+            if(rs.first()){
+                studentNameMostFrTextField.setText(rs.getString("F_Name")+ " " + rs.getString("L_Name"));
+                studentIDMostFrTextField.setText(rs.getString("S_ID"));
+            }
+        }
+        catch(Exception e){
+            
+        }
+        finally{
+            if(st != null) st.close();
+            if(rs != null) rs.close();
+        }
+    }
+    
+    public void printCommunityMostFr() throws SQLException{
+        String query = "SELECT Community_Name, COUNT(Focus_Report.S_ID) AS COUNT_SID\n" +
+                        "FROM Focus_Report, Student, Homeroom, Community\n" +
+                        "WHERE Focus_Report.S_ID = Student.S_ID AND Homeroom.Community = Community.Community_Name AND Homeroom.Room_No = Student.Room_No\n" +
+                        "GROUP BY Community_Name\n" +
+                        "HAVING COUNT_SID >= (SELECT MAX(COUNT_SID) AS MAX_SID\n" +
+                        "FROM (SELECT Community_Name, COUNT(Focus_Report.S_ID) AS COUNT_SID\n" +
+                        "FROM Focus_Report, Student, Homeroom, Community\n" +
+                        "WHERE Focus_Report.S_ID = Student.S_ID AND Homeroom.Community = Community.Community_Name AND Homeroom.Room_No = Student.Room_No\n" +
+                        "GROUP BY Community_Name) AS A);";
+        Statement st = null;
+        ResultSet rs = null;
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+            if(rs.first()){
+                communityNameMostFrTextField.setText(rs.getString("Community_Name"));
+                communityAmountMostFrTextField.setText(rs.getString("COUNT_SID"));
+            }
+        }
+        catch(Exception e){
+            
+        }
+        finally{
+            if(st != null) st.close();
+            if(rs != null) rs.close();
+        }
+    }
     
     public ArrayList<Student> studentList() throws SQLException{ //creates an ArrayList based on the student table in mysql
         ArrayList<Student> list = new ArrayList<>();
@@ -224,6 +348,8 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                                                 "FROM Focus_Report " +
                                                 "WHERE S_ID = ?";
         ResultSet count = null;
+        ResultSet rs = null;
+        Statement st = null;
         Object row[] = new Object[6];
         
         for(int i = 0; i < list.size(); i++){
@@ -258,13 +384,16 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     public final void showTeachers() throws SQLException{ //displays the full teacher table
         ArrayList<Teacher> list = teacherList();
         DefaultTableModel model = (DefaultTableModel) teacherTable.getModel();
-        Object row[] = new Object[5];
+        Object row[] = new Object[6];
         Statement st = null;
         ResultSet count = null;
+        Statement st2 = null;
+        ResultSet rs = null;
         for(int i = 0; i < list.size(); i++){
             try{ //try-catch to display the count of focus reports
                 String teacherToCount = list.get(i).getT_ID();
                 st = con.createStatement();
+                st2 = con.createStatement();
                 count = st.executeQuery("SELECT COUNT(T_ID) AS COUNT_TID " +
                                                 "FROM Focus_Report " +
                                                 "WHERE T_ID = " + teacherToCount);
@@ -279,6 +408,29 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 count.close();
                 st.close();
             }
+            try{
+                st2 = con.createStatement();
+                rs = st2.executeQuery("Select MaxTypeGroups.T_ID, Type From\n" +
+                                        "(SELECT T_ID, Type, COUNT(Type) as COUNT_T\n" +
+                                        "FROM Focus_Report\n" +
+                                        "WHERE T_ID = " + list.get(i).getT_ID() +
+                                        " GROUP BY T_ID, Type) AS MaxTypeGroups, (SELECT T_ID, MAX(COUNT_T) as MAX_COUNT\n" +
+                                        "FROM (SELECT T_ID, Type, count(Type) as COUNT_T\n" +
+                                        "            FROM Focus_Report                                        GROUP BY T_ID, Type) AS A\n" +
+                                        "        GROUP BY T_ID) AS TeachersMaxCount\n" +
+                                        "WHERE MaxTypeGroups.T_ID = TeachersMaxCount.T_ID AND COUNT_T = MAX_COUNT;");
+                
+                if(rs.first()){
+                    row[5] = rs.getString("Type");
+                }
+            }
+            catch(Exception e){
+                System.out.println("DA FUQ");
+            }
+            finally{
+                if(rs != null) rs.close();
+                if(st2 != null) st.close();
+            }
             row[0] = list.get(i).getT_ID();
             row[1] = list.get(i).getF_Name();
             row[2] = list.get(i).getL_Name();
@@ -290,7 +442,18 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     public final void showFocusReports()throws SQLException{ //displays the full focus report table
         ArrayList<FocusReport> list = FocusReportList();
         DefaultTableModel model = (DefaultTableModel) focusReportsTable.getModel();
-        Object row[] = new Object[9];
+        Object row[] = new Object[10];
+        Statement st = null;
+        ResultSet rs = null;
+        String query = "Select  \n" +
+                        "CASE quarter(Date)\n" +
+                        "    WHEN 1 THEN \"3rd Quarter\"\n" +
+                        "    WHEN 2 THEN \"4th Quarter\"\n" +
+                        "    WHEN 3 THEN \"1st Quarter\"\n" +
+                        "    WHEN 4 THEN \"2nd Quarter\"\n" +
+                        "END as Quarter\n" +
+                        "FROM Focus_Report\n" +
+                        "WHERE S_ID = ";
         for(int i = 0; i < list.size(); i++){
             row[0] = list.get(i).getS_ID();
             row[1] = list.get(i).getT_ID();
@@ -301,6 +464,20 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             row[6] = list.get(i).getStudent_Response();
             row[7] = list.get(i).getType();
             row[8] = list.get(i).getComm_Leader_Debrief();
+            try{
+                st = con.createStatement();
+                rs = st.executeQuery(query + list.get(i).getS_ID());
+                if(rs.first()){
+                    row[9] = rs.getString("Quarter");
+                }
+            }
+            catch(Exception e){
+                
+            }
+            finally{
+                if(rs != null) rs.close();
+                if(st != null) st.close();
+            }
             model.addRow(row);
         }
     }
@@ -388,6 +565,42 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             model.addRow(row);
         }
     }
+    
+    public void sort_student_table(){
+        DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model);
+        studentTable.setRowSorter(sorter);
+    }
+    
+    public void sort_teacher_table(){
+        DefaultTableModel model = (DefaultTableModel) teacherTable.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model);
+        teacherTable.setRowSorter(sorter);
+    }
+        
+    public void sort_focusreport_table(){
+        DefaultTableModel model = (DefaultTableModel) focusReportsTable.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model);
+        focusReportsTable.setRowSorter(sorter);
+    }
+            
+    public void sort_community_table(){
+        DefaultTableModel model = (DefaultTableModel) communityTable.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model);
+        communityTable.setRowSorter(sorter);
+    }
+                
+    public void sort_homeroom_table(){
+        DefaultTableModel model = (DefaultTableModel) homeroomTable.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model);
+        homeroomTable.setRowSorter(sorter);
+    }
+                    
+    public void sort_medication_table(){
+        DefaultTableModel model = (DefaultTableModel) medicationTable.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model);
+        medicationTable.setRowSorter(sorter);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -417,16 +630,18 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         addTeacherButton = new javax.swing.JButton();
         focusReportsPanel = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        studentIdFrSearchField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        timeInFrSearchField = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        dateFrSearchField = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         focusReportsTable = new javax.swing.JTable();
         focusReportSearchButton = new javax.swing.JButton();
         createFocusReportButton = new javax.swing.JButton();
         focusReportRefreshButton = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        teacherFrSearchField = new javax.swing.JTextField();
         communityPanel = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         communityTable = new javax.swing.JTable();
@@ -440,6 +655,26 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         studentIDMedicationtextField = new javax.swing.JTextField();
         jScrollPane6 = new javax.swing.JScrollPane();
         medicationTable = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+        mostFrOverviewPanel = new javax.swing.JPanel();
+        teacherOverviewPanel = new javax.swing.JPanel();
+        jLabel14 = new javax.swing.JLabel();
+        teacherNameMostFrTextField = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        teacherMostFrTextField = new javax.swing.JTextField();
+        studentOverviewPanel = new javax.swing.JPanel();
+        jLabel16 = new javax.swing.JLabel();
+        studentNameMostFrTextField = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        studentIDMostFrTextField = new javax.swing.JTextField();
+        communityOverviewPanel = new javax.swing.JPanel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        communityNameMostFrTextField = new javax.swing.JTextField();
+        communityAmountMostFrTextField = new javax.swing.JTextField();
+        homeroomOverviewPanel = new javax.swing.JPanel();
+        homeroomMaxFrTextField = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -455,7 +690,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(studentTable);
 
-        studentIDSearchButton.setText("Search");
+        studentIDSearchButton.setText("Filter");
         studentIDSearchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 studentIDSearchButtonActionPerformed(evt);
@@ -491,10 +726,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addComponent(studentResetButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addStudentButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(647, Short.MAX_VALUE))
             .addGroup(studentsPanelLayout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 556, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 637, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         studentsPanelLayout.setVerticalGroup(
             studentsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -520,12 +755,12 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Teacher ID", "First Name", "Last Name", "Subject", "# of Focus Reports"
+                "Teacher ID", "First Name", "Last Name", "Subject", "# of Focus Reports", "Common FR Type"
             }
         ));
         jScrollPane2.setViewportView(teacherTable);
 
-        teacherIDSearchButton.setText("Search");
+        teacherIDSearchButton.setText("Filter");
         teacherIDSearchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 teacherIDSearchButtonActionPerformed(evt);
@@ -553,6 +788,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             .addGroup(teachersPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(teachersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(teachersPanelLayout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -562,9 +798,8 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(teacherResetButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addTeacherButton))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(544, Short.MAX_VALUE))
+                        .addComponent(addTeacherButton)))
+                .addContainerGap(465, Short.MAX_VALUE))
         );
         teachersPanelLayout.setVerticalGroup(
             teachersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -594,12 +829,12 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Student ID", "Teacher ID", "Time In", "Time Out", "Date", "Teacher Description", "Student Response", "Type", "Debrief"
+                "Student ID", "Teacher ID", "Time In", "Time Out", "Date", "Teacher Description", "Student Response", "Type", "Debrief", "Quarter"
             }
         ));
         jScrollPane3.setViewportView(focusReportsTable);
 
-        focusReportSearchButton.setText("Search");
+        focusReportSearchButton.setText("Filter");
         focusReportSearchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 focusReportSearchButtonActionPerformed(evt);
@@ -620,6 +855,8 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             }
         });
 
+        jLabel8.setText("Teacher ID");
+
         javax.swing.GroupLayout focusReportsPanelLayout = new javax.swing.GroupLayout(focusReportsPanel);
         focusReportsPanel.setLayout(focusReportsPanelLayout);
         focusReportsPanelLayout.setHorizontalGroup(
@@ -627,26 +864,30 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             .addGroup(focusReportsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
                     .addGroup(focusReportsPanelLayout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(studentIdFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(teacherFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(timeInFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(dateFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(focusReportSearchButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(createFocusReportButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(focusReportRefreshButton)
-                        .addGap(0, 285, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         focusReportsPanelLayout.setVerticalGroup(
@@ -655,14 +896,16 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(studentIdFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(timeInFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dateFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(focusReportSearchButton)
                     .addComponent(createFocusReportButton)
-                    .addComponent(focusReportRefreshButton))
+                    .addComponent(focusReportRefreshButton)
+                    .addComponent(jLabel8)
+                    .addComponent(teacherFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(201, Short.MAX_VALUE))
@@ -675,7 +918,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Community Name", "Leader Name", "# of Focus Rooms"
+                "Community Name", "Leader ID", "# of Focus Reports"
             }
         ));
         jScrollPane4.setViewportView(communityTable);
@@ -785,6 +1028,190 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         );
 
         jTabbedPane1.addTab("Medication", medicationPanel);
+
+        mostFrOverviewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Most Focus Reports"));
+
+        teacherOverviewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Teacher"));
+
+        jLabel14.setText("Name");
+
+        jLabel15.setText("ID");
+
+        javax.swing.GroupLayout teacherOverviewPanelLayout = new javax.swing.GroupLayout(teacherOverviewPanel);
+        teacherOverviewPanel.setLayout(teacherOverviewPanelLayout);
+        teacherOverviewPanelLayout.setHorizontalGroup(
+            teacherOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(teacherOverviewPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(teacherOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel15)
+                    .addComponent(jLabel14))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(teacherOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(teacherNameMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(teacherMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(56, Short.MAX_VALUE))
+        );
+        teacherOverviewPanelLayout.setVerticalGroup(
+            teacherOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(teacherOverviewPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(teacherOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(teacherNameMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(teacherOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15)
+                    .addComponent(teacherMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
+
+        studentOverviewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Student"));
+
+        jLabel16.setText("Name");
+
+        jLabel17.setText("ID");
+
+        javax.swing.GroupLayout studentOverviewPanelLayout = new javax.swing.GroupLayout(studentOverviewPanel);
+        studentOverviewPanel.setLayout(studentOverviewPanelLayout);
+        studentOverviewPanelLayout.setHorizontalGroup(
+            studentOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(studentOverviewPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(studentOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel17)
+                    .addComponent(jLabel16))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(studentOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(studentNameMostFrTextField)
+                    .addComponent(studentIDMostFrTextField))
+                .addGap(57, 57, 57))
+        );
+        studentOverviewPanelLayout.setVerticalGroup(
+            studentOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(studentOverviewPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(studentOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(studentNameMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(studentOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(studentIDMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
+
+        communityOverviewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Community"));
+
+        jLabel18.setText("Name");
+
+        jLabel19.setText("Number");
+
+        javax.swing.GroupLayout communityOverviewPanelLayout = new javax.swing.GroupLayout(communityOverviewPanel);
+        communityOverviewPanel.setLayout(communityOverviewPanelLayout);
+        communityOverviewPanelLayout.setHorizontalGroup(
+            communityOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(communityOverviewPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(communityOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel18)
+                    .addComponent(jLabel19))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(communityOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(communityNameMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(communityAmountMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        communityOverviewPanelLayout.setVerticalGroup(
+            communityOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(communityOverviewPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(communityOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel18)
+                    .addComponent(communityNameMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(communityOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel19)
+                    .addComponent(communityAmountMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
+
+        homeroomOverviewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Homeroom"));
+
+        homeroomMaxFrTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homeroomMaxFrTextFieldActionPerformed(evt);
+            }
+        });
+
+        jLabel11.setText("Room #");
+
+        javax.swing.GroupLayout homeroomOverviewPanelLayout = new javax.swing.GroupLayout(homeroomOverviewPanel);
+        homeroomOverviewPanel.setLayout(homeroomOverviewPanelLayout);
+        homeroomOverviewPanelLayout.setHorizontalGroup(
+            homeroomOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, homeroomOverviewPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(homeroomMaxFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        homeroomOverviewPanelLayout.setVerticalGroup(
+            homeroomOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(homeroomOverviewPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(homeroomOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(homeroomMaxFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(51, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout mostFrOverviewPanelLayout = new javax.swing.GroupLayout(mostFrOverviewPanel);
+        mostFrOverviewPanel.setLayout(mostFrOverviewPanelLayout);
+        mostFrOverviewPanelLayout.setHorizontalGroup(
+            mostFrOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mostFrOverviewPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(mostFrOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(homeroomOverviewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(communityOverviewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(studentOverviewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(teacherOverviewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(40, 40, 40))
+        );
+        mostFrOverviewPanelLayout.setVerticalGroup(
+            mostFrOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mostFrOverviewPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(teacherOverviewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(studentOverviewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(communityOverviewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(homeroomOverviewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(mostFrOverviewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(698, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(mostFrOverviewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(172, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Overview", jPanel1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -932,7 +1359,20 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) focusReportsTable.getModel();
         try{
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM Focus_Report WHERE S_ID LIKE '" + jTextField1.getText() + "%'");
+            String query = "WHERE 1 = 1";
+            if(!studentIdFrSearchField.getText().equals("")){
+                query += " AND S_ID LIKE '" + studentIdFrSearchField.getText() + "%'";
+            }
+            if(!teacherFrSearchField.getText().equals("")){
+                query += " AND T_ID LIKE '" + teacherFrSearchField.getText() + "%'";
+            }
+            if(!timeInFrSearchField.getText().equals("")){
+                query += " AND Time_In LIKE '" + timeInFrSearchField.getText() + "%'";
+            }
+            if(!dateFrSearchField.getText().equals("")){
+                query += " AND Date LIKE '" + dateFrSearchField.getText() + "%'";
+            }
+            ResultSet rs = st.executeQuery("SELECT * FROM Focus_Report " + query);
         
             while(rs.next()){
                 FocusReport focusreport = new FocusReport(rs.getString("S_ID"), 
@@ -1166,6 +1606,11 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_focusReportRefreshButtonActionPerformed
 
+    private void homeroomMaxFrTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeroomMaxFrTextFieldActionPerformed
+        homeroomMaxFrTextField.setText("hi");
+    }//GEN-LAST:event_homeroomMaxFrTextFieldActionPerformed
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -1208,23 +1653,38 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addStudentButton;
     private javax.swing.JButton addTeacherButton;
+    private javax.swing.JTextField communityAmountMostFrTextField;
+    private javax.swing.JTextField communityNameMostFrTextField;
+    private javax.swing.JPanel communityOverviewPanel;
     private javax.swing.JPanel communityPanel;
     private javax.swing.JTable communityTable;
     private javax.swing.JButton createFocusReportButton;
+    private javax.swing.JTextField dateFrSearchField;
     private javax.swing.JButton focusReportRefreshButton;
     private javax.swing.JButton focusReportSearchButton;
     private javax.swing.JPanel focusReportsPanel;
     private javax.swing.JTable focusReportsTable;
+    private javax.swing.JTextField homeroomMaxFrTextField;
+    private javax.swing.JPanel homeroomOverviewPanel;
     private javax.swing.JPanel homeroomPanel;
     private javax.swing.JTable homeroomTable;
     private javax.swing.JTextField homeroomTeacherIDTextField;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -1232,21 +1692,28 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JPanel medicationPanel;
     private javax.swing.JTable medicationTable;
+    private javax.swing.JPanel mostFrOverviewPanel;
     private javax.swing.JTextField studentIDMedicationtextField;
+    private javax.swing.JTextField studentIDMostFrTextField;
     private javax.swing.JButton studentIDSearchButton;
     private javax.swing.JTextField studentIDTextField;
+    private javax.swing.JTextField studentIdFrSearchField;
+    private javax.swing.JTextField studentNameMostFrTextField;
+    private javax.swing.JPanel studentOverviewPanel;
     private javax.swing.JButton studentResetButton;
     private javax.swing.JTable studentTable;
     private javax.swing.JPanel studentsPanel;
+    private javax.swing.JTextField teacherFrSearchField;
     private javax.swing.JButton teacherIDSearchButton;
     private javax.swing.JTextField teacherIDTextField;
+    private javax.swing.JTextField teacherMostFrTextField;
+    private javax.swing.JTextField teacherNameMostFrTextField;
+    private javax.swing.JPanel teacherOverviewPanel;
     private javax.swing.JButton teacherResetButton;
     private javax.swing.JTable teacherTable;
     private javax.swing.JPanel teachersPanel;
+    private javax.swing.JTextField timeInFrSearchField;
     // End of variables declaration//GEN-END:variables
 }
