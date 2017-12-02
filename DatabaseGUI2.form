@@ -71,7 +71,7 @@
                       <EmptySpace pref="647" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jScrollPane1" min="-2" pref="637" max="-2" attributes="0"/>
+                      <Component id="jScrollPane1" min="-2" pref="925" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -112,17 +112,29 @@
                 <Component class="javax.swing.JTable" name="studentTable">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="6" rowCount="0">
+                      <Table columnCount="8" rowCount="0">
                         <Column editable="true" title="Student ID" type="java.lang.Object"/>
                         <Column editable="true" title="First Name" type="java.lang.Object"/>
                         <Column editable="true" title="Last Name" type="java.lang.Object"/>
                         <Column editable="true" title="D.O.B." type="java.lang.Object"/>
                         <Column editable="true" title="Homeroom" type="java.lang.Object"/>
                         <Column editable="true" title="# of Focus Reports" type="java.lang.Object"/>
+                        <Column editable="true" title="Community" type="java.lang.Object"/>
+                        <Column editable="true" title="Common FR Type" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                       <TableColumnModel selectionModel="0">
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
                         <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                           <Title/>
                           <Editor/>
@@ -203,7 +215,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane2" min="-2" pref="532" max="-2" attributes="0"/>
+                          <Component id="jScrollPane2" min="-2" pref="856" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -216,7 +228,7 @@
                               <Component id="addTeacherButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="465" max="32767" attributes="0"/>
+                      <EmptySpace pref="141" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -680,7 +692,7 @@
                         <Column editable="true" title="Room Number" type="java.lang.Object"/>
                         <Column editable="true" title="Teacher" type="java.lang.Object"/>
                         <Column editable="true" title="Community" type="java.lang.Object"/>
-                        <Column editable="true" title="Number of Focus Rooms" type="java.lang.Object"/>
+                        <Column editable="true" title="# of Focus Reports" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -735,7 +747,9 @@
                           <Group type="102" attributes="0">
                               <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="studentIDMedicationtextField" min="-2" pref="100" max="-2" attributes="0"/>
+                              <Component id="studentIDMedicationTextField" min="-2" pref="100" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="studentSearchButtonMedTable" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -749,11 +763,12 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="studentIDMedicationtextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="studentIDMedicationTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="studentSearchButtonMedTable" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane6" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="205" max="32767" attributes="0"/>
+                      <EmptySpace pref="201" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -764,7 +779,7 @@
                 <Property name="text" type="java.lang.String" value="Student ID"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="studentIDMedicationtextField">
+            <Component class="javax.swing.JTextField" name="studentIDMedicationTextField">
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane6">
               <AuxValues>
@@ -832,6 +847,14 @@
                 </Component>
               </SubComponents>
             </Container>
+            <Component class="javax.swing.JButton" name="studentSearchButtonMedTable">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Search"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="studentSearchButtonMedTableActionPerformed"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel1">
@@ -849,7 +872,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="mostFrOverviewPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="698" max="32767" attributes="0"/>
+                      <EmptySpace pref="760" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -858,7 +881,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="mostFrOverviewPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="172" max="32767" attributes="0"/>
+                      <EmptySpace pref="192" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -923,12 +946,12 @@
                                   <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="teacherNameMostFrTextField" min="-2" pref="120" max="-2" attributes="0"/>
-                                  <Component id="teacherMostFrTextField" min="-2" pref="120" max="-2" attributes="0"/>
+                                  <Component id="teacherNameOverviewLabel" min="-2" max="-2" attributes="0"/>
+                                  <Component id="teacherIdOverviewLabel" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="56" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -938,14 +961,14 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="teacherNameMostFrTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="teacherNameOverviewLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="teacherMostFrTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="teacherIdOverviewLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="20" max="32767" attributes="0"/>
+                              <EmptySpace pref="22" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -953,17 +976,17 @@
                   <SubComponents>
                     <Component class="javax.swing.JLabel" name="jLabel14">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Name"/>
+                        <Property name="text" type="java.lang.String" value="Name:"/>
                       </Properties>
-                    </Component>
-                    <Component class="javax.swing.JTextField" name="teacherNameMostFrTextField">
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel15">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="ID"/>
+                        <Property name="text" type="java.lang.String" value="ID:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="teacherMostFrTextField">
+                    <Component class="javax.swing.JLabel" name="teacherNameOverviewLabel">
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="teacherIdOverviewLabel">
                     </Component>
                   </SubComponents>
                 </Container>
@@ -987,10 +1010,10 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="studentNameMostFrTextField" max="32767" attributes="0"/>
-                                  <Component id="studentIDMostFrTextField" max="32767" attributes="0"/>
+                                  <Component id="studentNameOverviewLabel" min="-2" max="-2" attributes="0"/>
+                                  <Component id="studentIdOverviewLabel" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1000,14 +1023,14 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="studentNameMostFrTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="studentNameOverviewLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel17" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="studentIDMostFrTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="studentIdOverviewLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="20" max="32767" attributes="0"/>
+                              <EmptySpace pref="22" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1015,17 +1038,17 @@
                   <SubComponents>
                     <Component class="javax.swing.JLabel" name="jLabel16">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Name"/>
+                        <Property name="text" type="java.lang.String" value="Name:"/>
                       </Properties>
-                    </Component>
-                    <Component class="javax.swing.JTextField" name="studentNameMostFrTextField">
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel17">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="ID"/>
+                        <Property name="text" type="java.lang.String" value="ID:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="studentIDMostFrTextField">
+                    <Component class="javax.swing.JLabel" name="studentNameOverviewLabel">
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="studentIdOverviewLabel">
                     </Component>
                   </SubComponents>
                 </Container>
@@ -1048,9 +1071,9 @@
                                   <Component id="jLabel19" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="communityNameMostFrTextField" min="-2" pref="100" max="-2" attributes="0"/>
-                                  <Component id="communityAmountMostFrTextField" min="-2" pref="100" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="communityNameOverviewLabel" min="-2" max="-2" attributes="0"/>
+                                  <Component id="communityNumberOverviewLabel" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
@@ -1062,14 +1085,14 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel18" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="communityNameMostFrTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="communityNameOverviewLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel19" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="communityAmountMostFrTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="communityNumberOverviewLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="20" max="32767" attributes="0"/>
+                              <EmptySpace pref="22" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1077,17 +1100,17 @@
                   <SubComponents>
                     <Component class="javax.swing.JLabel" name="jLabel18">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Name"/>
+                        <Property name="text" type="java.lang.String" value="Name:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel19">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Number"/>
+                        <Property name="text" type="java.lang.String" value="Number:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="communityNameMostFrTextField">
+                    <Component class="javax.swing.JLabel" name="communityNameOverviewLabel">
                     </Component>
-                    <Component class="javax.swing.JTextField" name="communityAmountMostFrTextField">
+                    <Component class="javax.swing.JLabel" name="communityNumberOverviewLabel">
                     </Component>
                   </SubComponents>
                 </Container>
@@ -1107,8 +1130,8 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="homeroomMaxFrTextField" min="-2" pref="35" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="homeroomRoomNoLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="105" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1118,23 +1141,20 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="homeroomMaxFrTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="homeroomRoomNoLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="51" max="32767" attributes="0"/>
+                              <EmptySpace pref="53" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JTextField" name="homeroomMaxFrTextField">
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="homeroomMaxFrTextFieldActionPerformed"/>
-                      </Events>
-                    </Component>
                     <Component class="javax.swing.JLabel" name="jLabel11">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Room #"/>
+                        <Property name="text" type="java.lang.String" value="Room # :"/>
                       </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="homeroomRoomNoLabel">
                     </Component>
                   </SubComponents>
                 </Container>
