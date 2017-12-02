@@ -6,6 +6,7 @@
 
 
 import java.awt.HeadlessException;
+import java.awt.event.KeyEvent; //for prevent copy and paste (ctrl+c, ctrl+x, ctrl+v)
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -680,6 +681,20 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
         jLabel1.setText("Student ID");
 
+        studentIDTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                studentIDTextFieldActionPerformed(evt);
+            }
+        });
+        studentIDTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                studentIDTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                studentIDTextFieldKeyTyped(evt);
+            }
+        });
+
         studentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -749,6 +764,20 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         jTabbedPane1.addTab("Students", studentsPanel);
 
         jLabel2.setText("Teacher ID");
+
+        teacherIDTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                teacherIDTextFieldActionPerformed(evt);
+            }
+        });
+        teacherIDTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                teacherIDTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                teacherIDTextFieldKeyTyped(evt);
+            }
+        });
 
         teacherTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -820,9 +849,36 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
         jLabel3.setText("Student ID");
 
+        studentIdFrSearchField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                studentIdFrSearchFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                studentIdFrSearchFieldKeyTyped(evt);
+            }
+        });
+
         jLabel4.setText("Time In");
 
+        timeInFrSearchField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                timeInFrSearchFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                timeInFrSearchFieldKeyTyped(evt);
+            }
+        });
+
         jLabel5.setText("Date");
+
+        dateFrSearchField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                dateFrSearchFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                dateFrSearchFieldKeyTyped(evt);
+            }
+        });
 
         focusReportsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -856,6 +912,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         });
 
         jLabel8.setText("Teacher ID");
+
+        teacherFrSearchField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                teacherFrSearchFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                teacherFrSearchFieldKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout focusReportsPanelLayout = new javax.swing.GroupLayout(focusReportsPanel);
         focusReportsPanel.setLayout(focusReportsPanelLayout);
@@ -1609,6 +1674,189 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private void homeroomMaxFrTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeroomMaxFrTextFieldActionPerformed
         homeroomMaxFrTextField.setText("hi");
     }//GEN-LAST:event_homeroomMaxFrTextFieldActionPerformed
+
+    private void studentIDTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentIDTextFieldKeyTyped
+        // only accept integer
+        char enter = evt.getKeyChar();
+        if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+    }//GEN-LAST:event_studentIDTextFieldKeyTyped
+
+    private void studentIDTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentIDTextFieldKeyPressed
+        
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_studentIDTextFieldKeyPressed
+
+    private void teacherIDTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherIDTextFieldKeyTyped
+        // only accept integer
+        char enter = evt.getKeyChar();
+        if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+    }//GEN-LAST:event_teacherIDTextFieldKeyTyped
+
+    private void teacherIDTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherIDTextFieldKeyPressed
+        /* prevent when ctrl pressed (ctrl+x,c,v)
+        if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_C)
+        {
+            System.out.println("pressed ctrl+c");
+            evt.consume(); //prevent ctrl+c
+        }
+        
+        if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V)
+        {
+            System.out.println("pressed ctrl+v");
+            evt.consume(); //prevent ctrl+v
+        }
+        
+        if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_X)
+        {
+            System.out.println("pressed ctrl+x");
+            evt.consume(); //prevent ctrl+x
+        }
+        */
+        
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_teacherIDTextFieldKeyPressed
+
+    private void teacherIDTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_teacherIDTextFieldActionPerformed
+        
+    }//GEN-LAST:event_teacherIDTextFieldActionPerformed
+
+    private void studentIDTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_studentIDTextFieldActionPerformed
+        
+    }//GEN-LAST:event_studentIDTextFieldActionPerformed
+
+    private void studentIdFrSearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentIdFrSearchFieldKeyTyped
+        // only accept integer
+        char enter = evt.getKeyChar();
+        if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+    }//GEN-LAST:event_studentIdFrSearchFieldKeyTyped
+
+    private void studentIdFrSearchFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentIdFrSearchFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_studentIdFrSearchFieldKeyPressed
+
+    private void teacherFrSearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherFrSearchFieldKeyTyped
+        // only accept integer
+        char enter = evt.getKeyChar();
+        if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+    }//GEN-LAST:event_teacherFrSearchFieldKeyTyped
+
+    private void teacherFrSearchFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherFrSearchFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_teacherFrSearchFieldKeyPressed
+
+    private void timeInFrSearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_timeInFrSearchFieldKeyTyped
+        // only accept integer
+        char enter = evt.getKeyChar();
+
+        if(!((enter == ':') || (enter >='0') && (enter <= '9'))){
+            evt.consume();
+        }
+
+    }//GEN-LAST:event_timeInFrSearchFieldKeyTyped
+
+    private void timeInFrSearchFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_timeInFrSearchFieldKeyPressed
+       
+        char enter = evt.getKeyChar();
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //shift is needed for press ':' colon key
+        {           
+            
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_timeInFrSearchFieldKeyPressed
+
+    private void dateFrSearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateFrSearchFieldKeyTyped
+        // only accept integer
+        char enter = evt.getKeyChar();
+        if(!((enter == '-') || (enter >='0') && (enter <= '9'))){
+            evt.consume();
+        }
+    }//GEN-LAST:event_dateFrSearchFieldKeyTyped
+
+    private void dateFrSearchFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateFrSearchFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_dateFrSearchFieldKeyPressed
     
     
     /**
