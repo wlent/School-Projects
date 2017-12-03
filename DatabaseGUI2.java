@@ -6,7 +6,6 @@
 
 
 import java.awt.HeadlessException;
-import java.awt.event.KeyEvent; //for prevent copy and paste (ctrl+c, ctrl+x, ctrl+v)
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -43,6 +42,8 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         showCommunities();
         showHomerooms();
         showMedication();
+        showGuardians();
+        
         sort_student_table();       
         sort_teacher_table();      
         sort_focusreport_table();       
@@ -53,6 +54,11 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         printTeacherMostFr();
         printStudentMostFr();
         printCommunityMostFr();
+        
+        showByDayOfTheWeek();
+        showByMonthAndYear();
+        showByTimeOfDay();
+        showByQuarter();
     }
     
     
@@ -88,7 +94,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             st = con.createStatement();
             rs = st.executeQuery(query);
             if(rs.first()){
-                homeroomMaxFrTextField.setText(rs.getString("Room_No"));
+                homeroomRoomNoLabel.setText(rs.getString("Room_No"));
             }
         }
         catch(Exception e){
@@ -115,8 +121,8 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             st = con.createStatement();
             rs = st.executeQuery(query);
             if(rs.first()){
-                teacherMostFrTextField.setText(rs.getString("T_ID"));
-                teacherNameMostFrTextField.setText(rs.getString("F_Name") + " " + rs.getString("L_Name"));
+                teacherNameOverviewLabel.setText(rs.getString("T_ID"));
+                teacherIdOverviewLabel.setText(rs.getString("F_Name") + " " + rs.getString("L_Name"));
             }
         }
         catch(Exception e){
@@ -143,8 +149,8 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             st = con.createStatement();
             rs = st.executeQuery(query);
             if(rs.first()){
-                studentNameMostFrTextField.setText(rs.getString("F_Name")+ " " + rs.getString("L_Name"));
-                studentIDMostFrTextField.setText(rs.getString("S_ID"));
+                studentNameOverviewLabel.setText(rs.getString("F_Name")+ " " + rs.getString("L_Name"));
+                studentIdOverviewLabel.setText(rs.getString("S_ID"));
             }
         }
         catch(Exception e){
@@ -172,8 +178,8 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             st = con.createStatement();
             rs = st.executeQuery(query);
             if(rs.first()){
-                communityNameMostFrTextField.setText(rs.getString("Community_Name"));
-                communityAmountMostFrTextField.setText(rs.getString("COUNT_SID"));
+                communityNameOverviewLabel.setText(rs.getString("Community_Name"));
+                communityNumberOverviewLabel.setText(rs.getString("COUNT_SID"));
             }
         }
         catch(Exception e){
@@ -323,7 +329,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         
             while(rs.next()){
                 Medication med = new Medication(rs.getString("S_ID"), rs.getString("Clinical_Name"), 
-                rs.getString("Brand Name"), rs.getString("Dosage"), rs.getString("Side_Effects"),
+                rs.getString("Brand_Name"), rs.getString("Dosage"), rs.getString("Side_Effects"),
                 rs.getString("ADM_HS"), rs.getString("M_ID"));
                 list.add(med);
             }
@@ -341,6 +347,159 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         return list;
     }
     
+    public ArrayList<Guardian> GuardianList() throws SQLException{
+        ArrayList<Guardian> list = new ArrayList<>();
+        Statement st = null;
+        ResultSet rs = null;
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery("SELECT * FROM Guardian");
+            while(rs.next()){
+                Guardian guardian = new Guardian(rs.getString("F_name"), rs.getString("L_name"),
+                rs.getString("S_ID"), rs.getString("Phone"), rs.getString("Address"),
+                rs.getString("Email"), rs.getString("Relationship"));
+                list.add(guardian);
+            }
+        }
+        catch(Exception e){
+            System.out.println("Error with Guardian table construction");
+        }
+        finally{
+            if(rs != null) rs.close();
+            if(st != null) st.close();
+        }
+        return list;
+    }
+    
+    public void showGuardians() throws SQLException{
+        ArrayList<Guardian> list = GuardianList();
+        DefaultTableModel model = (DefaultTableModel) guardianTable.getModel();
+        Object[] row = new Object[7];
+        for(int i = 0; i < list.size(); i++){
+            row[0] = list.get(i).getFName();
+            row[1] = list.get(i).getLName();
+            row[2] = list.get(i).getSID();
+            row[3] = list.get(i).getPhone();
+            row[4] = list.get(i).getAddress();
+            row[5] = list.get(i).getEmail();
+            row[6] = list.get(i).getRelationship();
+            model.addRow(row);
+        }
+    }
+    
+    public void showByDayOfTheWeek() throws SQLException{
+        Statement st = null;
+        ResultSet rs = null;
+        String query = "Select dayname(Date), Count(dayname(Date))\n" +
+                        "from Focus_Report\n" +
+                        "group by dayname(Date);";
+        DefaultTableModel model = (DefaultTableModel) byDayOfTheWeekTable.getModel();
+        Object[] row = new Object[2];
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+            while(rs.next()){
+                row[0] = rs.getString("dayname(Date)");
+                row[1] = rs.getString("Count(dayname(Date))");
+                model.addRow(row);
+            }
+        }
+        catch(Exception e){
+            System.out.println("Error with showByDayOfTheWeek");
+        }
+        finally{
+            if(rs != null) rs.close();
+            if(st != null) st.close();
+        }
+    }
+    
+    public void showByMonthAndYear() throws SQLException{
+        Statement st = null;
+        ResultSet rs = null;
+        String query = "Select monthname(Date) AS Month, year(Date) AS Year, count(month(Date)) AS Number\n" +
+                        "from Focus_Report\n" +
+                        "group by month(Date), year(Date);";
+        DefaultTableModel model = (DefaultTableModel) byMonthAndYearTable.getModel();
+        Object[] row = new Object[3];
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+            while(rs.next()){
+                row[0] = rs.getString("Month");
+                row[1] = rs.getString("Year");
+                row[2] = rs.getString("Number");
+                model.addRow(row);
+            }
+        }
+        catch(Exception e){
+            System.out.println("Error with showByDayOfTheWeek");
+        }
+        finally{
+            if(rs != null) rs.close();
+            if(st != null) st.close();
+        }
+    }
+    
+    public void showByTimeOfDay() throws SQLException{
+        Statement st = null;
+        ResultSet rs = null;
+        String query = "SELECT hour(Time_In), count(hour(Time_In))\n" +
+                        "FROM Focus_Report\n" +
+                        "GROUP BY hour(Time_In)\n" +
+                        "ORDER BY count(hour(Time_In)) DESC;";
+        DefaultTableModel model = (DefaultTableModel) byTimeOfDayTable.getModel();
+        Object[] row = new Object[2];
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+            while(rs.next()){
+                row[0] = rs.getString("hour(Time_In)");
+                row[1] = rs.getString("count(hour(Time_In))");
+                model.addRow(row);
+            }
+        }
+        catch(Exception e){
+            System.out.println("Error with showByDayOfTheWeek");
+        }
+        finally{
+            if(rs != null) rs.close();
+            if(st != null) st.close();
+        }
+    }
+    
+    public void showByQuarter() throws SQLException{
+        Statement st = null;
+        ResultSet rs = null;
+        String query = "Select Quarter, count(Quarter)\n" +
+                        "from (Select S_ID, T_ID, Time_In, Date, \n" +
+                        "    CASE quarter(Date)\n" +
+                        "        WHEN 1 THEN \"3rd Quarter\"\n" +
+                        "        WHEN 2 THEN \"4th Quarter\"\n" +
+                        "        WHEN 3 THEN \"1st Quarter\"\n" +
+                        "        WHEN 4 THEN \"2nd Quarter\"\n" +
+                        "    END as Quarter\n" +
+                        "    from Focus_Report) as Quarter_Table\n" +
+                        "group by Quarter;";
+        DefaultTableModel model = (DefaultTableModel) byQuarterTable.getModel();
+        Object[] row = new Object[2];
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+            while(rs.next()){
+                row[0] = rs.getString("Quarter");
+                row[1] = rs.getString("count(Quarter)");
+                model.addRow(row);
+            }
+        }
+        catch(Exception e){
+            System.out.println("Error with showByQuarter");
+        }
+        finally{
+            if(rs != null) rs.close();
+            if(st != null) st.close();
+        }
+    }
+    
     public final void showStudents() throws SQLException{ //displays the full student table
         ArrayList<Student> list = studentList();
         DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
@@ -348,10 +507,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         String query = "SELECT COUNT(S_ID) AS COUNT_SID " +
                                                 "FROM Focus_Report " +
                                                 "WHERE S_ID = ?";
+        String query2 = "SELECT Community\n" +
+                        "FROM Student s, Homeroom h\n" +
+                        "WHERE s.Room_No = h.Room_No\n" +
+                        "AND S_ID = ";
+        
         ResultSet count = null;
         ResultSet rs = null;
         Statement st = null;
-        Object row[] = new Object[6];
+        Object row[] = new Object[8];
         
         for(int i = 0; i < list.size(); i++){
             
@@ -363,12 +527,12 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 if(count.first()){
                     row[5] = count.getString("COUNT_SID");
                 }
+                
                 row[0] = list.get(i).getS_ID();
                 row[1] = list.get(i).getF_Name();
                 row[2] = list.get(i).getL_Name();
                 row[3] = list.get(i).getDOB();
                 row[4] = list.get(i).getRoom_No();
-                model.addRow(row);
             }
         
             catch(Exception e){
@@ -379,6 +543,51 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 try{if(preparedStatement != null)preparedStatement.close();} catch(Exception e){};
                 
             }
+            try{
+                String studentToCount = list.get(i).getS_ID();
+                st = con.createStatement();
+                rs = st.executeQuery(query2 + " " + studentToCount);
+                if(rs.first()){
+                    row[6] = rs.getString("Community");
+                }
+            }
+            catch(Exception e){
+                System.out.println("error with community");
+            }
+            finally{
+                if(rs != null) rs.close();
+                if(st != null) st.close();
+            }
+            try{
+                String sid = list.get(i).getS_ID();
+                String query3 = "Select MaxTypeGroups.S_ID, Type \n" +
+                        "From\n" +
+                        "(SELECT S_ID, Type, COUNT(Type) as COUNT_T\n" +
+                        "FROM Focus_Report\n" +
+                        "WHERE S_ID = " + sid +
+                        " GROUP BY S_ID, Type) AS MaxTypeGroups, (SELECT S_ID, MAX(COUNT_T) as MAX_COUNT\n" +
+                        "	FROM (SELECT S_ID, Type, count(Type) as COUNT_T\n" +
+                        "		FROM Focus_Report\n" +
+                        "		GROUP BY S_ID, Type) AS A\n" +
+                        "	GROUP BY S_ID) AS StudentsMaxCount\n" +
+                        "WHERE MaxTypeGroups.S_ID = StudentsMaxCount.S_ID AND COUNT_T = MAX_COUNT;";
+                st = con.createStatement();
+                rs = st.executeQuery(query3);
+                if(!rs.first()){
+                    row[7] = " ";
+                }
+                else if(rs.first()){
+                    row[7] = rs.getString("Type");
+                }
+            }
+            catch(Exception e){
+                
+            }
+            finally{
+                if(rs != null) rs.close();
+                if(st != null) st.close();
+            }
+            model.addRow(row);
         }
     }
     
@@ -391,8 +600,9 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         Statement st2 = null;
         ResultSet rs = null;
         for(int i = 0; i < list.size(); i++){
+            String teacherToCount = list.get(i).getT_ID();
             try{ //try-catch to display the count of focus reports
-                String teacherToCount = list.get(i).getT_ID();
+                
                 st = con.createStatement();
                 st2 = con.createStatement();
                 count = st.executeQuery("SELECT COUNT(T_ID) AS COUNT_TID " +
@@ -414,22 +624,24 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 rs = st2.executeQuery("Select MaxTypeGroups.T_ID, Type From\n" +
                                         "(SELECT T_ID, Type, COUNT(Type) as COUNT_T\n" +
                                         "FROM Focus_Report\n" +
-                                        "WHERE T_ID = " + list.get(i).getT_ID() +
+                                        "WHERE T_ID = " + teacherToCount +
                                         " GROUP BY T_ID, Type) AS MaxTypeGroups, (SELECT T_ID, MAX(COUNT_T) as MAX_COUNT\n" +
                                         "FROM (SELECT T_ID, Type, count(Type) as COUNT_T\n" +
                                         "            FROM Focus_Report                                        GROUP BY T_ID, Type) AS A\n" +
                                         "        GROUP BY T_ID) AS TeachersMaxCount\n" +
                                         "WHERE MaxTypeGroups.T_ID = TeachersMaxCount.T_ID AND COUNT_T = MAX_COUNT;");
-                
-                if(rs.first()){
+                if(!rs.first()){
+                    row[5] = " ";
+                }
+                else if(rs.first()){
                     row[5] = rs.getString("Type");
                 }
             }
             catch(Exception e){
-                System.out.println("DA FUQ");
+                System.out.println("teacher type not working");
             }
             finally{
-                if(rs != null) rs.close();
+                rs.close();
                 if(st2 != null) st.close();
             }
             row[0] = list.get(i).getT_ID();
@@ -612,7 +824,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        guardianPanel = new javax.swing.JTabbedPane();
         studentsPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         studentIDTextField = new javax.swing.JTextField();
@@ -653,39 +865,60 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         homeroomTable = new javax.swing.JTable();
         medicationPanel = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
-        studentIDMedicationtextField = new javax.swing.JTextField();
+        studentIDMedicationTextField = new javax.swing.JTextField();
         jScrollPane6 = new javax.swing.JScrollPane();
         medicationTable = new javax.swing.JTable();
+        studentSearchButtonMedTable = new javax.swing.JButton();
+        addMedicationButton = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
+        medicationIDMedicationTextField = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         mostFrOverviewPanel = new javax.swing.JPanel();
         teacherOverviewPanel = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
-        teacherNameMostFrTextField = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
-        teacherMostFrTextField = new javax.swing.JTextField();
+        teacherNameOverviewLabel = new javax.swing.JLabel();
+        teacherIdOverviewLabel = new javax.swing.JLabel();
         studentOverviewPanel = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
-        studentNameMostFrTextField = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
-        studentIDMostFrTextField = new javax.swing.JTextField();
+        studentNameOverviewLabel = new javax.swing.JLabel();
+        studentIdOverviewLabel = new javax.swing.JLabel();
         communityOverviewPanel = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
-        communityNameMostFrTextField = new javax.swing.JTextField();
-        communityAmountMostFrTextField = new javax.swing.JTextField();
+        communityNameOverviewLabel = new javax.swing.JLabel();
+        communityNumberOverviewLabel = new javax.swing.JLabel();
         homeroomOverviewPanel = new javax.swing.JPanel();
-        homeroomMaxFrTextField = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
+        homeroomRoomNoLabel = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        byDayOfTheWeekPanel = new javax.swing.JPanel();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        byDayOfTheWeekTable = new javax.swing.JTable();
+        byMonthAndYearPanel = new javax.swing.JPanel();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        byMonthAndYearTable = new javax.swing.JTable();
+        byTimeOfDayPanel = new javax.swing.JPanel();
+        jScrollPane10 = new javax.swing.JScrollPane();
+        byTimeOfDayTable = new javax.swing.JTable();
+        byQuarterPanel = new javax.swing.JPanel();
+        jScrollPane11 = new javax.swing.JScrollPane();
+        byQuarterTable = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        studentIdGuardianSearchTextField = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        firstNameGuardianSearchTextField = new javax.swing.JTextField();
+        studentIdFilterButtonGuardians = new javax.swing.JButton();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        guardianTable = new javax.swing.JTable();
+        globalRefreshButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Student ID");
 
-        studentIDTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                studentIDTextFieldActionPerformed(evt);
-            }
-        });
         studentIDTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 studentIDTextFieldKeyPressed(evt);
@@ -700,7 +933,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Student ID", "First Name", "Last Name", "D.O.B.", "Homeroom", "# of Focus Reports"
+                "Student ID", "First Name", "Last Name", "D.O.B.", "Homeroom", "# of Focus Reports", "Community", "Common FR Type"
             }
         ));
         jScrollPane1.setViewportView(studentTable);
@@ -741,10 +974,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addComponent(studentResetButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addStudentButton)
-                .addContainerGap(647, Short.MAX_VALUE))
+                .addContainerGap(1160, Short.MAX_VALUE))
             .addGroup(studentsPanelLayout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 637, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jScrollPane1)
+                .addContainerGap())
         );
         studentsPanelLayout.setVerticalGroup(
             studentsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -758,18 +991,13 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                     .addComponent(addStudentButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(201, Short.MAX_VALUE))
+                .addContainerGap(238, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Students", studentsPanel);
+        guardianPanel.addTab("Students", studentsPanel);
 
         jLabel2.setText("Teacher ID");
 
-        teacherIDTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                teacherIDTextFieldActionPerformed(evt);
-            }
-        });
         teacherIDTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 teacherIDTextFieldKeyPressed(evt);
@@ -817,7 +1045,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             .addGroup(teachersPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(teachersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2)
                     .addGroup(teachersPanelLayout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -827,8 +1055,8 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(teacherResetButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addTeacherButton)))
-                .addContainerGap(465, Short.MAX_VALUE))
+                        .addComponent(addTeacherButton)
+                        .addContainerGap(1157, Short.MAX_VALUE))))
         );
         teachersPanelLayout.setVerticalGroup(
             teachersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -842,10 +1070,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                     .addComponent(addTeacherButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(201, Short.MAX_VALUE))
+                .addContainerGap(238, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Teachers", teachersPanel);
+        guardianPanel.addTab("Teachers", teachersPanel);
 
         jLabel3.setText("Student ID");
 
@@ -929,7 +1157,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             .addGroup(focusReportsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 1498, Short.MAX_VALUE)
                     .addGroup(focusReportsPanelLayout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -973,10 +1201,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                     .addComponent(teacherFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(201, Short.MAX_VALUE))
+                .addContainerGap(238, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Focus Reports", focusReportsPanel);
+        guardianPanel.addTab("Focus Reports", focusReportsPanel);
 
         communityTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -995,17 +1223,17 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             .addGroup(communityPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(544, Short.MAX_VALUE))
+                .addContainerGap(1057, Short.MAX_VALUE))
         );
         communityPanelLayout.setVerticalGroup(
             communityPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(communityPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(230, Short.MAX_VALUE))
+                .addContainerGap(267, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Community", communityPanel);
+        guardianPanel.addTab("Community", communityPanel);
 
         jLabel6.setText("Teacher ID");
 
@@ -1020,7 +1248,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Room Number", "Teacher", "Community", "Number of Focus Rooms"
+                "Room Number", "Teacher", "Community", "# of Focus Reports"
             }
         ));
         jScrollPane5.setViewportView(homeroomTable);
@@ -1037,7 +1265,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(homeroomTeacherIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(544, Short.MAX_VALUE))
+                .addContainerGap(1057, Short.MAX_VALUE))
         );
         homeroomPanelLayout.setVerticalGroup(
             homeroomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1048,12 +1276,21 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                     .addComponent(homeroomTeacherIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(205, Short.MAX_VALUE))
+                .addContainerGap(242, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Homeroom", homeroomPanel);
+        guardianPanel.addTab("Homeroom", homeroomPanel);
 
         jLabel7.setText("Student ID");
+
+        studentIDMedicationTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                studentIDMedicationTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                studentIDMedicationTextFieldKeyTyped(evt);
+            }
+        });
 
         medicationTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1065,6 +1302,31 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         ));
         jScrollPane6.setViewportView(medicationTable);
 
+        studentSearchButtonMedTable.setText("Filter");
+        studentSearchButtonMedTable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                studentSearchButtonMedTableActionPerformed(evt);
+            }
+        });
+
+        addMedicationButton.setText("Add");
+        addMedicationButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addMedicationButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setText("Medication ID");
+
+        medicationIDMedicationTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                medicationIDMedicationTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                medicationIDMedicationTextFieldKeyTyped(evt);
+            }
+        });
+
         javax.swing.GroupLayout medicationPanelLayout = new javax.swing.GroupLayout(medicationPanel);
         medicationPanel.setLayout(medicationPanelLayout);
         medicationPanelLayout.setHorizontalGroup(
@@ -1072,11 +1334,19 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             .addGroup(medicationPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(medicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 1498, Short.MAX_VALUE)
                     .addGroup(medicationPanelLayout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(studentIDMedicationtextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(studentIDMedicationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(medicationIDMedicationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(studentSearchButtonMedTable)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addMedicationButton)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -1086,21 +1356,25 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(medicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(studentIDMedicationtextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(studentIDMedicationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(studentSearchButtonMedTable)
+                    .addComponent(addMedicationButton)
+                    .addComponent(jLabel12)
+                    .addComponent(medicationIDMedicationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(205, Short.MAX_VALUE))
+                .addContainerGap(240, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Medication", medicationPanel);
+        guardianPanel.addTab("Medication", medicationPanel);
 
         mostFrOverviewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Most Focus Reports"));
 
         teacherOverviewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Teacher"));
 
-        jLabel14.setText("Name");
+        jLabel14.setText("Name:");
 
-        jLabel15.setText("ID");
+        jLabel15.setText("ID:");
 
         javax.swing.GroupLayout teacherOverviewPanelLayout = new javax.swing.GroupLayout(teacherOverviewPanel);
         teacherOverviewPanel.setLayout(teacherOverviewPanelLayout);
@@ -1111,11 +1385,11 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addGroup(teacherOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel15)
                     .addComponent(jLabel14))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(teacherOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(teacherNameMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(teacherMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(56, Short.MAX_VALUE))
+                    .addComponent(teacherNameOverviewLabel)
+                    .addComponent(teacherIdOverviewLabel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         teacherOverviewPanelLayout.setVerticalGroup(
             teacherOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1123,19 +1397,19 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(teacherOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
-                    .addComponent(teacherNameMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(teacherNameOverviewLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(teacherOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel15)
-                    .addComponent(teacherMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(teacherIdOverviewLabel))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         studentOverviewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Student"));
 
-        jLabel16.setText("Name");
+        jLabel16.setText("Name:");
 
-        jLabel17.setText("ID");
+        jLabel17.setText("ID:");
 
         javax.swing.GroupLayout studentOverviewPanelLayout = new javax.swing.GroupLayout(studentOverviewPanel);
         studentOverviewPanel.setLayout(studentOverviewPanelLayout);
@@ -1148,9 +1422,9 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                     .addComponent(jLabel16))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(studentOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(studentNameMostFrTextField)
-                    .addComponent(studentIDMostFrTextField))
-                .addGap(57, 57, 57))
+                    .addComponent(studentNameOverviewLabel)
+                    .addComponent(studentIdOverviewLabel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         studentOverviewPanelLayout.setVerticalGroup(
             studentOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1158,19 +1432,19 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(studentOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
-                    .addComponent(studentNameMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(studentNameOverviewLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(studentOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17)
-                    .addComponent(studentIDMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(studentIdOverviewLabel))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         communityOverviewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Community"));
 
-        jLabel18.setText("Name");
+        jLabel18.setText("Name:");
 
-        jLabel19.setText("Number");
+        jLabel19.setText("Number:");
 
         javax.swing.GroupLayout communityOverviewPanelLayout = new javax.swing.GroupLayout(communityOverviewPanel);
         communityOverviewPanel.setLayout(communityOverviewPanelLayout);
@@ -1182,9 +1456,9 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                     .addComponent(jLabel18)
                     .addComponent(jLabel19))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(communityOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(communityNameMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(communityAmountMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(communityOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(communityNameOverviewLabel)
+                    .addComponent(communityNumberOverviewLabel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         communityOverviewPanelLayout.setVerticalGroup(
@@ -1193,23 +1467,17 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(communityOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18)
-                    .addComponent(communityNameMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(communityNameOverviewLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(communityOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel19)
-                    .addComponent(communityAmountMostFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(communityNumberOverviewLabel))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         homeroomOverviewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Homeroom"));
 
-        homeroomMaxFrTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                homeroomMaxFrTextFieldActionPerformed(evt);
-            }
-        });
-
-        jLabel11.setText("Room #");
+        jLabel11.setText("Room # :");
 
         javax.swing.GroupLayout homeroomOverviewPanelLayout = new javax.swing.GroupLayout(homeroomOverviewPanel);
         homeroomOverviewPanel.setLayout(homeroomOverviewPanelLayout);
@@ -1219,8 +1487,8 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(homeroomMaxFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(homeroomRoomNoLabel)
+                .addContainerGap(105, Short.MAX_VALUE))
         );
         homeroomOverviewPanelLayout.setVerticalGroup(
             homeroomOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1228,8 +1496,8 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(homeroomOverviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
-                    .addComponent(homeroomMaxFrTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(51, Short.MAX_VALUE))
+                    .addComponent(homeroomRoomNoLabel))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout mostFrOverviewPanelLayout = new javax.swing.GroupLayout(mostFrOverviewPanel);
@@ -1256,7 +1524,151 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addComponent(communityOverviewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(homeroomOverviewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(229, Short.MAX_VALUE))
+        );
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Focus Reports by Time and Date"));
+
+        byDayOfTheWeekPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("By Day of the Week"));
+
+        byDayOfTheWeekTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Day", "# "
+            }
+        ));
+        jScrollPane8.setViewportView(byDayOfTheWeekTable);
+
+        javax.swing.GroupLayout byDayOfTheWeekPanelLayout = new javax.swing.GroupLayout(byDayOfTheWeekPanel);
+        byDayOfTheWeekPanel.setLayout(byDayOfTheWeekPanelLayout);
+        byDayOfTheWeekPanelLayout.setHorizontalGroup(
+            byDayOfTheWeekPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(byDayOfTheWeekPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        byDayOfTheWeekPanelLayout.setVerticalGroup(
+            byDayOfTheWeekPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(byDayOfTheWeekPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane8)
+                .addContainerGap())
+        );
+
+        byMonthAndYearPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("By Month and Year"));
+
+        byMonthAndYearTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Month", "Year", "#"
+            }
+        ));
+        jScrollPane9.setViewportView(byMonthAndYearTable);
+
+        javax.swing.GroupLayout byMonthAndYearPanelLayout = new javax.swing.GroupLayout(byMonthAndYearPanel);
+        byMonthAndYearPanel.setLayout(byMonthAndYearPanelLayout);
+        byMonthAndYearPanelLayout.setHorizontalGroup(
+            byMonthAndYearPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(byMonthAndYearPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
+        byMonthAndYearPanelLayout.setVerticalGroup(
+            byMonthAndYearPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(byMonthAndYearPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane9)
+                .addContainerGap())
+        );
+
+        byTimeOfDayPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("By Time of Day"));
+
+        byTimeOfDayTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Hour", "#"
+            }
+        ));
+        jScrollPane10.setViewportView(byTimeOfDayTable);
+
+        javax.swing.GroupLayout byTimeOfDayPanelLayout = new javax.swing.GroupLayout(byTimeOfDayPanel);
+        byTimeOfDayPanel.setLayout(byTimeOfDayPanelLayout);
+        byTimeOfDayPanelLayout.setHorizontalGroup(
+            byTimeOfDayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(byTimeOfDayPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(42, Short.MAX_VALUE))
+        );
+        byTimeOfDayPanelLayout.setVerticalGroup(
+            byTimeOfDayPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(byTimeOfDayPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane10)
+                .addContainerGap())
+        );
+
+        byQuarterPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("By Quarter"));
+
+        byQuarterTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Quarter", "#"
+            }
+        ));
+        jScrollPane11.setViewportView(byQuarterTable);
+
+        javax.swing.GroupLayout byQuarterPanelLayout = new javax.swing.GroupLayout(byQuarterPanel);
+        byQuarterPanel.setLayout(byQuarterPanelLayout);
+        byQuarterPanelLayout.setHorizontalGroup(
+            byQuarterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(byQuarterPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        byQuarterPanelLayout.setVerticalGroup(
+            byQuarterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(byQuarterPanelLayout.createSequentialGroup()
+                .addComponent(jScrollPane11)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(byDayOfTheWeekPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(byMonthAndYearPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(byTimeOfDayPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(byQuarterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(168, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(byQuarterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(byTimeOfDayPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(byMonthAndYearPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(byDayOfTheWeekPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -1266,17 +1678,107 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(mostFrOverviewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(698, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(mostFrOverviewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(172, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(mostFrOverviewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Overview", jPanel1);
+        guardianPanel.addTab("Overview", jPanel1);
+
+        jLabel9.setText("Student ID");
+
+        studentIdGuardianSearchTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                studentIdGuardianSearchTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                studentIdGuardianSearchTextFieldKeyTyped(evt);
+            }
+        });
+
+        jLabel10.setText("First Name");
+
+        firstNameGuardianSearchTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                firstNameGuardianSearchTextFieldActionPerformed(evt);
+            }
+        });
+        firstNameGuardianSearchTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                firstNameGuardianSearchTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                firstNameGuardianSearchTextFieldKeyTyped(evt);
+            }
+        });
+
+        studentIdFilterButtonGuardians.setText("Filter");
+        studentIdFilterButtonGuardians.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                studentIdFilterButtonGuardiansActionPerformed(evt);
+            }
+        });
+
+        guardianTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "First Name", "Last Name", "Student ID", "Phone", "Address", "Email", "Relationship"
+            }
+        ));
+        jScrollPane7.setViewportView(guardianTable);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(firstNameGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(studentIdGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(studentIdFilterButtonGuardians)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 1522, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(11, 11, 11)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(firstNameGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9)
+                    .addComponent(studentIdGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(studentIdFilterButtonGuardians))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(239, Short.MAX_VALUE))
+        );
+
+        guardianPanel.addTab("Guardians", jPanel2);
+
+        globalRefreshButton.setText("Refresh");
+        globalRefreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                globalRefreshButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1284,14 +1786,20 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(guardianPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1527, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(globalRefreshButton)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
+                .addComponent(globalRefreshButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(guardianPanel)
                 .addContainerGap())
         );
 
@@ -1671,20 +2179,197 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_focusReportRefreshButtonActionPerformed
 
-    private void homeroomMaxFrTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeroomMaxFrTextFieldActionPerformed
-        homeroomMaxFrTextField.setText("hi");
-    }//GEN-LAST:event_homeroomMaxFrTextFieldActionPerformed
-
-    private void studentIDTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentIDTextFieldKeyTyped
-        // only accept integer
-        char enter = evt.getKeyChar();
-        if(!(Character.isDigit(enter))){
-            evt.consume();
+    private void studentSearchButtonMedTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_studentSearchButtonMedTableActionPerformed
+        ArrayList<Medication> list = new ArrayList<>();
+        DefaultTableModel model = (DefaultTableModel) medicationTable.getModel();
+        Statement st = null;
+        ResultSet rs = null;
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery("SELECT * FROM Medication WHERE S_ID LIKE '%" + studentIDMedicationTextField.getText() + 
+                    "%' AND M_ID LIKE '%"+ medicationIDMedicationTextField.getText()+"%'");
+        
+            while(rs.next()){
+                Medication med = new Medication(rs.getString("S_ID"), rs.getString("Clinical_Name"), 
+                        rs.getString("Brand_Name"), rs.getString("Dosage"), rs.getString("Side_Effects"), 
+                        rs.getString("ADM_HS"), rs.getString("M_ID"));
+                list.add(med);
+            }
         }
-    }//GEN-LAST:event_studentIDTextFieldKeyTyped
+        
+        catch(SQLException e){
+            System.out.println("Error");
+        }
+        
+        finally{
+            if(rs != null) try {
+                rs.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if(st != null) try {
+                st.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        model.setRowCount(0);
+        Object row[] = new Object[7];
+        for(int i = 0; i < list.size(); i++){
+            row[0] = list.get(i).getSID();
+            row[1] = list.get(i).getClinicalName();
+            row[2] = list.get(i).getBrandName();
+            row[3] = list.get(i).getDosage();
+            row[4] = list.get(i).getSideEffects();
+            row[5] = list.get(i).getADMHS();
+            row[6] = list.get(i).getMID();
+            model.addRow(row);
+        }
+        
+    }//GEN-LAST:event_studentSearchButtonMedTableActionPerformed
+
+    private void studentIdFilterButtonGuardiansActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_studentIdFilterButtonGuardiansActionPerformed
+        ArrayList<Guardian> list = new ArrayList<>();
+        DefaultTableModel model = (DefaultTableModel) guardianTable.getModel();
+        Statement st = null;
+        ResultSet rs = null;
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery("SELECT * FROM Guardian WHERE F_name LIKE '%" 
+                    + firstNameGuardianSearchTextField.getText() + "%' AND S_ID LIKE '%" + studentIdGuardianSearchTextField.getText() + "%'");
+        
+            while(rs.next()){
+                Guardian guardian = new Guardian(rs.getString("F_name"), rs.getString("L_name"),
+                rs.getString("S_ID"), rs.getString("Phone"), rs.getString("Address"),
+                rs.getString("Email"), rs.getString("Relationship"));
+                list.add(guardian);
+            }
+        }
+        
+        catch(SQLException e){
+            System.out.println("Error");
+        }
+        
+        finally{
+            if(rs != null) try {
+                rs.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if(st != null) try {
+                st.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        model.setRowCount(0);
+        Object[] row = new Object[7];
+        for(int i = 0; i < list.size(); i++){
+            row[0] = list.get(i).getFName();
+            row[1] = list.get(i).getLName();
+            row[2] = list.get(i).getSID();
+            row[3] = list.get(i).getPhone();
+            row[4] = list.get(i).getAddress();
+            row[5] = list.get(i).getEmail();
+            row[6] = list.get(i).getRelationship();
+            model.addRow(row);
+        }
+        
+    }//GEN-LAST:event_studentIdFilterButtonGuardiansActionPerformed
+
+    private void globalRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_globalRefreshButtonActionPerformed
+        DefaultTableModel studentModel = (DefaultTableModel) studentTable.getModel();
+        studentModel.setRowCount(0);
+        DefaultTableModel teacherModel = (DefaultTableModel) teacherTable.getModel();
+        teacherModel.setRowCount(0);
+        DefaultTableModel focusReportModel = (DefaultTableModel) focusReportsTable.getModel();
+        focusReportModel.setRowCount(0);
+        DefaultTableModel homeroomModel = (DefaultTableModel) homeroomTable.getModel();
+        homeroomModel.setRowCount(0);
+        DefaultTableModel communityModel = (DefaultTableModel) communityTable.getModel();
+        communityModel.setRowCount(0);
+        DefaultTableModel medicationModel = (DefaultTableModel) medicationTable.getModel();
+        medicationModel.setRowCount(0);
+        DefaultTableModel guardianModel = (DefaultTableModel) guardianTable.getModel();
+        guardianModel.setRowCount(0);
+        DefaultTableModel showByQuarterModel = (DefaultTableModel) byQuarterTable.getModel();
+        showByQuarterModel.setRowCount(0);
+        DefaultTableModel showByMonthAndYearModel = (DefaultTableModel) byMonthAndYearTable.getModel();
+        showByMonthAndYearModel.setRowCount(0);
+        DefaultTableModel showByDayOfTheWeekModel = (DefaultTableModel) byDayOfTheWeekTable.getModel();
+        showByDayOfTheWeekModel.setRowCount(0);
+        DefaultTableModel showByTimeOfDayModel = (DefaultTableModel) byTimeOfDayTable.getModel();
+        showByTimeOfDayModel.setRowCount(0);
+        try {
+            showStudents();
+            showTeachers();
+            showFocusReports();
+            showHomerooms();
+            showCommunities();
+            showMedication();
+            showGuardians();
+            showByQuarter();
+            showByMonthAndYear();
+            showByDayOfTheWeek();
+            showByTimeOfDay();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_globalRefreshButtonActionPerformed
+
+    private void addMedicationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMedicationButtonActionPerformed
+      JTextField studentIDField = new JTextField(10);
+      JTextField clinicalNameField = new JTextField(15);
+      JTextField brandNameField = new JTextField(15);
+      JTextField dosageField = new JTextField(8);
+      JTextField sideEffectsField = new JTextField(15);
+      JTextField administeredField = new JTextField(15);
+      JTextField medicationIDField = new JTextField(15);
+      Object[] inputFields = {"Student ID:", studentIDField, "Clinical Name:", clinicalNameField,
+                                "Brand Name:", brandNameField, "Dosage:", dosageField, 
+                                "Side Effects: ", sideEffectsField, "Administered:", administeredField,
+                                "Medication ID:", medicationIDField};
+      
+
+      int result = JOptionPane.showConfirmDialog(null, inputFields, 
+               "New Medication", JOptionPane.OK_CANCEL_OPTION);
+      if (result == JOptionPane.OK_OPTION) {
+        PreparedStatement ps = null;
+        try{
+             String query = "INSERT INTO Medication (S_ID, Clinical_Name, Brand_Name, " +
+                     "Dosage, Side_Effects, ADM_HS, M_ID) " + 
+                     " VALUES(?, ?, ?, ?, ?, ?, ?);";
+             ps = con.prepareStatement(query);
+             ps.setString(1, studentIDField.getText());
+             ps.setString(2, clinicalNameField.getText());
+             ps.setString(3, brandNameField.getText());
+             ps.setString(4, dosageField.getText());
+             ps.setString(5, sideEffectsField.getText());
+             ps.setString(6, administeredField.getText());
+             ps.setString(7, medicationIDField.getText());
+             ps.executeUpdate();
+             JOptionPane.showMessageDialog(null, "Success");
+             
+         }
+        catch(HeadlessException | SQLException e){
+             JOptionPane.showMessageDialog(null, "Please check all fields and try again.");
+        }
+        finally{
+            try {
+                ps.close();
+            } 
+            catch (SQLException ex) {
+                Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+      }
+    }//GEN-LAST:event_addMedicationButtonActionPerformed
+
+    private void firstNameGuardianSearchTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstNameGuardianSearchTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_firstNameGuardianSearchTextFieldActionPerformed
 
     private void studentIDTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentIDTextFieldKeyPressed
-        
         if(evt.isControlDown()) //prevent further action when ctrl pressed
         {
             evt.consume();
@@ -1701,35 +2386,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_studentIDTextFieldKeyPressed
 
-    private void teacherIDTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherIDTextFieldKeyTyped
+    private void studentIDTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentIDTextFieldKeyTyped
         // only accept integer
         char enter = evt.getKeyChar();
         if(!(Character.isDigit(enter))){
             evt.consume();
         }
-    }//GEN-LAST:event_teacherIDTextFieldKeyTyped
+    }//GEN-LAST:event_studentIDTextFieldKeyTyped
 
     private void teacherIDTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherIDTextFieldKeyPressed
-        /* prevent when ctrl pressed (ctrl+x,c,v)
-        if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_C)
-        {
-            System.out.println("pressed ctrl+c");
-            evt.consume(); //prevent ctrl+c
-        }
-        
-        if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V)
-        {
-            System.out.println("pressed ctrl+v");
-            evt.consume(); //prevent ctrl+v
-        }
-        
-        if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_X)
-        {
-            System.out.println("pressed ctrl+x");
-            evt.consume(); //prevent ctrl+x
-        }
-        */
-        
         if(evt.isControlDown()) //prevent further action when ctrl pressed
         {
             evt.consume();
@@ -1746,21 +2411,13 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_teacherIDTextFieldKeyPressed
 
-    private void teacherIDTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_teacherIDTextFieldActionPerformed
-        
-    }//GEN-LAST:event_teacherIDTextFieldActionPerformed
-
-    private void studentIDTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_studentIDTextFieldActionPerformed
-        
-    }//GEN-LAST:event_studentIDTextFieldActionPerformed
-
-    private void studentIdFrSearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentIdFrSearchFieldKeyTyped
+    private void teacherIDTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherIDTextFieldKeyTyped
         // only accept integer
         char enter = evt.getKeyChar();
         if(!(Character.isDigit(enter))){
             evt.consume();
         }
-    }//GEN-LAST:event_studentIdFrSearchFieldKeyTyped
+    }//GEN-LAST:event_teacherIDTextFieldKeyTyped
 
     private void studentIdFrSearchFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentIdFrSearchFieldKeyPressed
         if(evt.isControlDown()) //prevent further action when ctrl pressed
@@ -1779,13 +2436,13 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_studentIdFrSearchFieldKeyPressed
 
-    private void teacherFrSearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherFrSearchFieldKeyTyped
+    private void studentIdFrSearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentIdFrSearchFieldKeyTyped
         // only accept integer
         char enter = evt.getKeyChar();
         if(!(Character.isDigit(enter))){
             evt.consume();
         }
-    }//GEN-LAST:event_teacherFrSearchFieldKeyTyped
+    }//GEN-LAST:event_studentIdFrSearchFieldKeyTyped
 
     private void teacherFrSearchFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherFrSearchFieldKeyPressed
         if(evt.isControlDown()) //prevent further action when ctrl pressed
@@ -1804,19 +2461,16 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_teacherFrSearchFieldKeyPressed
 
-    private void timeInFrSearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_timeInFrSearchFieldKeyTyped
+    private void teacherFrSearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherFrSearchFieldKeyTyped
         // only accept integer
         char enter = evt.getKeyChar();
-
-        if(!((enter == ':') || (enter >='0') && (enter <= '9'))){
+        if(!(Character.isDigit(enter))){
             evt.consume();
         }
-
-    }//GEN-LAST:event_timeInFrSearchFieldKeyTyped
+    }//GEN-LAST:event_teacherFrSearchFieldKeyTyped
 
     private void timeInFrSearchFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_timeInFrSearchFieldKeyPressed
-       
-        char enter = evt.getKeyChar();
+        
         if(evt.isControlDown()) //prevent further action when ctrl pressed
         {
             evt.consume();
@@ -1833,13 +2487,14 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_timeInFrSearchFieldKeyPressed
 
-    private void dateFrSearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateFrSearchFieldKeyTyped
-        // only accept integer
+    private void timeInFrSearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_timeInFrSearchFieldKeyTyped
+        // only accept integer and ':' colon for TimeIn serach
         char enter = evt.getKeyChar();
-        if(!((enter == '-') || (enter >='0') && (enter <= '9'))){
+
+        if(!((enter == ':') || (enter >='0') && (enter <= '9'))){
             evt.consume();
         }
-    }//GEN-LAST:event_dateFrSearchFieldKeyTyped
+    }//GEN-LAST:event_timeInFrSearchFieldKeyTyped
 
     private void dateFrSearchFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateFrSearchFieldKeyPressed
         if(evt.isControlDown()) //prevent further action when ctrl pressed
@@ -1857,6 +2512,114 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             evt.consume();  
         }
     }//GEN-LAST:event_dateFrSearchFieldKeyPressed
+
+    private void dateFrSearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateFrSearchFieldKeyTyped
+        // only accept integer and '-'hyphen
+        char enter = evt.getKeyChar();
+        if(!((enter == '-') || (enter >='0') && (enter <= '9'))){
+            evt.consume();
+        }
+    }//GEN-LAST:event_dateFrSearchFieldKeyTyped
+
+    private void firstNameGuardianSearchTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_firstNameGuardianSearchTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_firstNameGuardianSearchTextFieldKeyPressed
+
+    private void firstNameGuardianSearchTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_firstNameGuardianSearchTextFieldKeyTyped
+        // only accept Alphabetic
+        char enter = evt.getKeyChar();
+        if(!(Character.isAlphabetic(enter))){
+            evt.consume();
+        }
+    }//GEN-LAST:event_firstNameGuardianSearchTextFieldKeyTyped
+
+    private void studentIdGuardianSearchTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentIdGuardianSearchTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_studentIdGuardianSearchTextFieldKeyPressed
+
+    private void studentIdGuardianSearchTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentIdGuardianSearchTextFieldKeyTyped
+        // only accept integer
+        char enter = evt.getKeyChar();
+        if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+    }//GEN-LAST:event_studentIdGuardianSearchTextFieldKeyTyped
+
+    private void studentIDMedicationTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentIDMedicationTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_studentIDMedicationTextFieldKeyPressed
+
+    private void studentIDMedicationTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentIDMedicationTextFieldKeyTyped
+        // only accept integer
+        char enter = evt.getKeyChar();
+        if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+    }//GEN-LAST:event_studentIDMedicationTextFieldKeyTyped
+
+    private void medicationIDMedicationTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_medicationIDMedicationTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_medicationIDMedicationTextFieldKeyPressed
+
+    private void medicationIDMedicationTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_medicationIDMedicationTextFieldKeyTyped
+        // only accept integer
+        char enter = evt.getKeyChar();
+        if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+    }//GEN-LAST:event_medicationIDMedicationTextFieldKeyTyped
     
     
     /**
@@ -1899,26 +2662,41 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addMedicationButton;
     private javax.swing.JButton addStudentButton;
     private javax.swing.JButton addTeacherButton;
-    private javax.swing.JTextField communityAmountMostFrTextField;
-    private javax.swing.JTextField communityNameMostFrTextField;
+    private javax.swing.JPanel byDayOfTheWeekPanel;
+    private javax.swing.JTable byDayOfTheWeekTable;
+    private javax.swing.JPanel byMonthAndYearPanel;
+    private javax.swing.JTable byMonthAndYearTable;
+    private javax.swing.JPanel byQuarterPanel;
+    private javax.swing.JTable byQuarterTable;
+    private javax.swing.JPanel byTimeOfDayPanel;
+    private javax.swing.JTable byTimeOfDayTable;
+    private javax.swing.JLabel communityNameOverviewLabel;
+    private javax.swing.JLabel communityNumberOverviewLabel;
     private javax.swing.JPanel communityOverviewPanel;
     private javax.swing.JPanel communityPanel;
     private javax.swing.JTable communityTable;
     private javax.swing.JButton createFocusReportButton;
     private javax.swing.JTextField dateFrSearchField;
+    private javax.swing.JTextField firstNameGuardianSearchTextField;
     private javax.swing.JButton focusReportRefreshButton;
     private javax.swing.JButton focusReportSearchButton;
     private javax.swing.JPanel focusReportsPanel;
     private javax.swing.JTable focusReportsTable;
-    private javax.swing.JTextField homeroomMaxFrTextField;
+    private javax.swing.JButton globalRefreshButton;
+    private javax.swing.JTabbedPane guardianPanel;
+    private javax.swing.JTable guardianTable;
     private javax.swing.JPanel homeroomOverviewPanel;
     private javax.swing.JPanel homeroomPanel;
+    private javax.swing.JLabel homeroomRoomNoLabel;
     private javax.swing.JTable homeroomTable;
     private javax.swing.JTextField homeroomTeacherIDTextField;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
@@ -1932,32 +2710,43 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane10;
+    private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JScrollPane jScrollPane9;
+    private javax.swing.JTextField medicationIDMedicationTextField;
     private javax.swing.JPanel medicationPanel;
     private javax.swing.JTable medicationTable;
     private javax.swing.JPanel mostFrOverviewPanel;
-    private javax.swing.JTextField studentIDMedicationtextField;
-    private javax.swing.JTextField studentIDMostFrTextField;
+    private javax.swing.JTextField studentIDMedicationTextField;
     private javax.swing.JButton studentIDSearchButton;
     private javax.swing.JTextField studentIDTextField;
+    private javax.swing.JButton studentIdFilterButtonGuardians;
     private javax.swing.JTextField studentIdFrSearchField;
-    private javax.swing.JTextField studentNameMostFrTextField;
+    private javax.swing.JTextField studentIdGuardianSearchTextField;
+    private javax.swing.JLabel studentIdOverviewLabel;
+    private javax.swing.JLabel studentNameOverviewLabel;
     private javax.swing.JPanel studentOverviewPanel;
     private javax.swing.JButton studentResetButton;
+    private javax.swing.JButton studentSearchButtonMedTable;
     private javax.swing.JTable studentTable;
     private javax.swing.JPanel studentsPanel;
     private javax.swing.JTextField teacherFrSearchField;
     private javax.swing.JButton teacherIDSearchButton;
     private javax.swing.JTextField teacherIDTextField;
-    private javax.swing.JTextField teacherMostFrTextField;
-    private javax.swing.JTextField teacherNameMostFrTextField;
+    private javax.swing.JLabel teacherIdOverviewLabel;
+    private javax.swing.JLabel teacherNameOverviewLabel;
     private javax.swing.JPanel teacherOverviewPanel;
     private javax.swing.JButton teacherResetButton;
     private javax.swing.JTable teacherTable;
