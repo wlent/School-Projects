@@ -32,7 +32,7 @@
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -69,8 +69,8 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="mostFrOverviewPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jPanel3" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="72" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -382,7 +382,7 @@
                           <Component id="byTimeOfDayPanel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="byQuarterPanel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="168" max="32767" attributes="0"/>
+                          <EmptySpace pref="110" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -443,8 +443,8 @@
                           <Properties>
                             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                               <Table columnCount="2" rowCount="0">
-                                <Column editable="true" title="Day" type="java.lang.Object"/>
-                                <Column editable="true" title="# " type="java.lang.Object"/>
+                                <Column editable="false" title="Day" type="java.lang.Object"/>
+                                <Column editable="false" title="# " type="java.lang.Object"/>
                               </Table>
                             </Property>
                             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -511,9 +511,9 @@
                           <Properties>
                             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                               <Table columnCount="3" rowCount="0">
-                                <Column editable="true" title="Month" type="java.lang.Object"/>
-                                <Column editable="true" title="Year" type="java.lang.Object"/>
-                                <Column editable="true" title="#" type="java.lang.Object"/>
+                                <Column editable="false" title="Month" type="java.lang.Object"/>
+                                <Column editable="false" title="Year" type="java.lang.Object"/>
+                                <Column editable="false" title="#" type="java.lang.Object"/>
                               </Table>
                             </Property>
                             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -585,8 +585,8 @@
                           <Properties>
                             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                               <Table columnCount="2" rowCount="0">
-                                <Column editable="true" title="Hour" type="java.lang.Object"/>
-                                <Column editable="true" title="#" type="java.lang.Object"/>
+                                <Column editable="false" title="Hour" type="java.lang.Object"/>
+                                <Column editable="false" title="#" type="java.lang.Object"/>
                               </Table>
                             </Property>
                             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -652,8 +652,8 @@
                           <Properties>
                             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                               <Table columnCount="2" rowCount="0">
-                                <Column editable="true" title="Quarter" type="java.lang.Object"/>
-                                <Column editable="true" title="#" type="java.lang.Object"/>
+                                <Column editable="false" title="Quarter" type="java.lang.Object"/>
+                                <Column editable="false" title="#" type="java.lang.Object"/>
                               </Table>
                             </Property>
                             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -810,14 +810,14 @@
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="8" rowCount="0">
-                        <Column editable="true" title="Student ID" type="java.lang.Object"/>
-                        <Column editable="true" title="First Name" type="java.lang.Object"/>
-                        <Column editable="true" title="Last Name" type="java.lang.Object"/>
-                        <Column editable="true" title="D.O.B." type="java.lang.Object"/>
-                        <Column editable="true" title="Homeroom" type="java.lang.Object"/>
-                        <Column editable="true" title="# of Focus Reports" type="java.lang.Object"/>
-                        <Column editable="true" title="Community" type="java.lang.Object"/>
-                        <Column editable="true" title="Common FR Type" type="java.lang.Object"/>
+                        <Column editable="false" title="Student ID" type="java.lang.Object"/>
+                        <Column editable="false" title="First Name" type="java.lang.Object"/>
+                        <Column editable="false" title="Last Name" type="java.lang.Object"/>
+                        <Column editable="false" title="D.O.B." type="java.lang.Object"/>
+                        <Column editable="false" title="Homeroom" type="java.lang.Object"/>
+                        <Column editable="false" title="# of Focus Reports" type="java.lang.Object"/>
+                        <Column editable="false" title="Community" type="java.lang.Object"/>
+                        <Column editable="false" title="Common FR Type" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -934,6 +934,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="DOBDisplayTextField">
               <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="DOBDisplayTextFieldActionPerformed"/>
                 <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="DOBDisplayTextFieldKeyPressed"/>
                 <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="DOBDisplayTextFieldKeyTyped"/>
               </Events>
@@ -1080,12 +1081,12 @@
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="6" rowCount="0">
-                        <Column editable="true" title="Teacher ID" type="java.lang.Object"/>
-                        <Column editable="true" title="First Name" type="java.lang.Object"/>
-                        <Column editable="true" title="Last Name" type="java.lang.Object"/>
-                        <Column editable="true" title="Subject" type="java.lang.Object"/>
-                        <Column editable="true" title="# of Focus Reports" type="java.lang.Object"/>
-                        <Column editable="true" title="Common FR Type" type="java.lang.Object"/>
+                        <Column editable="false" title="Teacher ID" type="java.lang.Object"/>
+                        <Column editable="false" title="First Name" type="java.lang.Object"/>
+                        <Column editable="false" title="Last Name" type="java.lang.Object"/>
+                        <Column editable="false" title="Subject" type="java.lang.Object"/>
+                        <Column editable="false" title="# of Focus Reports" type="java.lang.Object"/>
+                        <Column editable="false" title="Common FR Type" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -1420,16 +1421,16 @@
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="10" rowCount="0">
-                        <Column editable="true" title="Student ID" type="java.lang.Object"/>
-                        <Column editable="true" title="Teacher ID" type="java.lang.Object"/>
-                        <Column editable="true" title="Time In" type="java.lang.Object"/>
-                        <Column editable="true" title="Time Out" type="java.lang.Object"/>
-                        <Column editable="true" title="Date" type="java.lang.Object"/>
-                        <Column editable="true" title="Teacher Description" type="java.lang.Object"/>
-                        <Column editable="true" title="Student Response" type="java.lang.Object"/>
-                        <Column editable="true" title="Type" type="java.lang.Object"/>
-                        <Column editable="true" title="Debrief" type="java.lang.Object"/>
-                        <Column editable="true" title="Quarter" type="java.lang.Object"/>
+                        <Column editable="false" title="Student ID" type="java.lang.Object"/>
+                        <Column editable="false" title="Teacher ID" type="java.lang.Object"/>
+                        <Column editable="false" title="Time In" type="java.lang.Object"/>
+                        <Column editable="false" title="Time Out" type="java.lang.Object"/>
+                        <Column editable="false" title="Date" type="java.lang.Object"/>
+                        <Column editable="false" title="Teacher Description" type="java.lang.Object"/>
+                        <Column editable="false" title="Student Response" type="java.lang.Object"/>
+                        <Column editable="false" title="Type" type="java.lang.Object"/>
+                        <Column editable="false" title="Debrief" type="java.lang.Object"/>
+                        <Column editable="false" title="Quarter" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -1682,17 +1683,17 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane4" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="1057" max="32767" attributes="0"/>
+                      <Component id="jScrollPane4" min="-2" pref="557" max="-2" attributes="0"/>
+                      <EmptySpace pref="982" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                       <Component id="jScrollPane4" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="290" max="32767" attributes="0"/>
+                      <EmptySpace pref="262" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1709,9 +1710,9 @@
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="3" rowCount="0">
-                        <Column editable="true" title="Community Name" type="java.lang.Object"/>
-                        <Column editable="true" title="Leader ID" type="java.lang.Object"/>
-                        <Column editable="true" title="# of Focus Reports" type="java.lang.Object"/>
+                        <Column editable="false" title="Community Name" type="java.lang.Object"/>
+                        <Column editable="false" title="Leader ID" type="java.lang.Object"/>
+                        <Column editable="false" title="# of Focus Reports" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -1754,10 +1755,11 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Component id="jScrollPane5" min="-2" pref="558" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
                               <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="homeroomNoTextField" min="-2" pref="100" max="-2" attributes="0"/>
@@ -1766,9 +1768,8 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="HomeroomRefreshButton" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane5" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="1057" max="32767" attributes="0"/>
+                      <EmptySpace pref="981" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1811,10 +1812,10 @@
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="4" rowCount="0">
-                        <Column editable="true" title="Room Number" type="java.lang.Object"/>
-                        <Column editable="true" title="Teacher" type="java.lang.Object"/>
-                        <Column editable="true" title="Community" type="java.lang.Object"/>
-                        <Column editable="true" title="# of Focus Reports" type="java.lang.Object"/>
+                        <Column editable="false" title="Room Number" type="java.lang.Object"/>
+                        <Column editable="false" title="Teacher" type="java.lang.Object"/>
+                        <Column editable="false" title="Community" type="java.lang.Object"/>
+                        <Column editable="false" title="# of Focus Reports" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -2015,13 +2016,13 @@
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="7" rowCount="0">
-                        <Column editable="true" title="Student ID" type="java.lang.Object"/>
-                        <Column editable="true" title="Clinical Name" type="java.lang.Object"/>
-                        <Column editable="true" title="Brand Name" type="java.lang.Object"/>
-                        <Column editable="true" title="Dosage" type="java.lang.Object"/>
-                        <Column editable="true" title="Side Effects" type="java.lang.Object"/>
-                        <Column editable="true" title="Adminstered" type="java.lang.Object"/>
-                        <Column editable="true" title="Medication ID" type="java.lang.Object"/>
+                        <Column editable="false" title="Student ID" type="java.lang.Object"/>
+                        <Column editable="false" title="Clinical Name" type="java.lang.Object"/>
+                        <Column editable="false" title="Brand Name" type="java.lang.Object"/>
+                        <Column editable="false" title="Dosage" type="java.lang.Object"/>
+                        <Column editable="false" title="Side Effects" type="java.lang.Object"/>
+                        <Column editable="false" title="Adminstered" type="java.lang.Object"/>
+                        <Column editable="false" title="Medication ID" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -2357,11 +2358,11 @@
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="7" rowCount="0">
-                        <Column editable="true" title="First Name" type="java.lang.Object"/>
-                        <Column editable="true" title="Last Name" type="java.lang.Object"/>
-                        <Column editable="true" title="Student ID" type="java.lang.Object"/>
-                        <Column editable="true" title="Phone" type="java.lang.Object"/>
-                        <Column editable="true" title="Address" type="java.lang.Object"/>
+                        <Column editable="false" title="First Name" type="java.lang.Object"/>
+                        <Column editable="false" title="Last Name" type="java.lang.Object"/>
+                        <Column editable="false" title="Student ID" type="java.lang.Object"/>
+                        <Column editable="false" title="Phone" type="java.lang.Object"/>
+                        <Column editable="false" title="Address" type="java.lang.Object"/>
                         <Column editable="true" title="Email" type="java.lang.Object"/>
                         <Column editable="true" title="Relationship" type="java.lang.Object"/>
                       </Table>

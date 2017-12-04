@@ -1172,7 +1172,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Day", "# "
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane8.setViewportView(byDayOfTheWeekTable);
 
         javax.swing.GroupLayout byDayOfTheWeekPanelLayout = new javax.swing.GroupLayout(byDayOfTheWeekPanel);
@@ -1201,7 +1209,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Month", "Year", "#"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane9.setViewportView(byMonthAndYearTable);
 
         javax.swing.GroupLayout byMonthAndYearPanelLayout = new javax.swing.GroupLayout(byMonthAndYearPanel);
@@ -1230,7 +1246,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Hour", "#"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane10.setViewportView(byTimeOfDayTable);
 
         javax.swing.GroupLayout byTimeOfDayPanelLayout = new javax.swing.GroupLayout(byTimeOfDayPanel);
@@ -1259,7 +1283,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Quarter", "#"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane11.setViewportView(byQuarterTable);
 
         javax.swing.GroupLayout byQuarterPanelLayout = new javax.swing.GroupLayout(byQuarterPanel);
@@ -1291,7 +1323,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addComponent(byTimeOfDayPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(byQuarterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(168, Short.MAX_VALUE))
+                .addContainerGap(110, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1313,8 +1345,8 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(mostFrOverviewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(72, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1346,7 +1378,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Student ID", "First Name", "Last Name", "D.O.B.", "Homeroom", "# of Focus Reports", "Community", "Common FR Type"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         studentTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 studentTableMouseClicked(evt);
@@ -1413,6 +1453,11 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
         jLabel21.setText("Last Name");
 
+        DOBDisplayTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DOBDisplayTextFieldActionPerformed(evt);
+            }
+        });
         DOBDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 DOBDisplayTextFieldKeyPressed(evt);
@@ -1540,7 +1585,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Teacher ID", "First Name", "Last Name", "Subject", "# of Focus Reports", "Common FR Type"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         teacherTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 teacherTableMouseClicked(evt);
@@ -1741,7 +1794,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Student ID", "Teacher ID", "Time In", "Time Out", "Date", "Teacher Description", "Student Response", "Type", "Debrief", "Quarter"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         focusReportsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 focusReportsTableMouseClicked(evt);
@@ -2039,7 +2100,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Community Name", "Leader ID", "# of Focus Reports"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane4.setViewportView(communityTable);
 
         javax.swing.GroupLayout communityPanelLayout = new javax.swing.GroupLayout(communityPanel);
@@ -2048,15 +2117,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             communityPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(communityPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(1057, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 557, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(982, Short.MAX_VALUE))
         );
         communityPanelLayout.setVerticalGroup(
             communityPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(communityPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(38, 38, 38)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(290, Short.MAX_VALUE))
+                .addContainerGap(262, Short.MAX_VALUE))
         );
 
         guardianPanel.addTab("Community", communityPanel);
@@ -2076,7 +2145,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Room Number", "Teacher", "Community", "# of Focus Reports"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane5.setViewportView(homeroomTable);
 
         HomeroomSearchButton.setText("Filter");
@@ -2100,6 +2177,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             .addGroup(homeroomPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(homeroomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(homeroomPanelLayout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -2107,9 +2185,8 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(HomeroomSearchButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(HomeroomRefreshButton))
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(1057, Short.MAX_VALUE))
+                        .addComponent(HomeroomRefreshButton)))
+                .addContainerGap(981, Short.MAX_VALUE))
         );
         homeroomPanelLayout.setVerticalGroup(
             homeroomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2150,7 +2227,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Student ID", "Clinical Name", "Brand Name", "Dosage", "Side Effects", "Adminstered", "Medication ID"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         medicationTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 medicationTableMouseClicked(evt);
@@ -2419,7 +2504,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "First Name", "Last Name", "Student ID", "Phone", "Address", "Email", "Relationship"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         guardianTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 guardianTableMouseClicked(evt);
@@ -2647,7 +2740,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(globalRefreshButton)
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addGap(55, 55, 55))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2905,7 +2998,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
       DOBField.addKeyListener(new KeyAdapter(){
             public void keyTyped(KeyEvent evt) {  
                 char enter = evt.getKeyChar();
-                if(!((enter == '/') || (enter >='0') && (enter <= '9'))){
+                if(!((enter == '-') || (enter >='0') && (enter <= '9'))){
                     evt.consume();
                 }
                 if(DOBField.getText().length() >= 10)
@@ -4579,7 +4672,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
     private void DOBDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DOBDisplayTextFieldKeyTyped
         char enter = evt.getKeyChar();
-        if(!((enter == '/') || (enter >='0') && (enter <= '9'))){
+        if(!((enter == '-') || (enter >='0') && (enter <= '9'))){
             evt.consume();
         }
         if(DOBDisplayTextField.getText().length() >= 10)
@@ -5475,6 +5568,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private void phoneGDisplayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phoneGDisplayTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_phoneGDisplayTextFieldActionPerformed
+
+    private void DOBDisplayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DOBDisplayTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_DOBDisplayTextFieldActionPerformed
     
     
     /**
