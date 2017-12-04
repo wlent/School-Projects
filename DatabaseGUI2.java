@@ -6,6 +6,8 @@
 
 
 import java.awt.HeadlessException;
+import java.awt.event.KeyEvent; //for prevent copy and paste (press crtl, alt, shift key)
+import java.awt.event.KeyAdapter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Box;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -50,6 +53,9 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         sort_community_table();      
         sort_homeroom_table();
         sort_medication_table();
+        sort_guardian_table();
+        
+        
         printHrMostFr();
         printTeacherMostFr();
         printStudentMostFr();
@@ -814,6 +820,12 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model);
         medicationTable.setRowSorter(sorter);
     }
+    
+    public void sort_guardian_table(){
+        DefaultTableModel model = (DefaultTableModel) guardianTable.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model);
+        guardianTable.setRowSorter(sorter); 
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -872,6 +884,14 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         addMedicationButton = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         medicationIDMedicationTextField = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        studentIdGuardianSearchTextField = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        firstNameGuardianSearchTextField = new javax.swing.JTextField();
+        studentIdFilterButtonGuardians = new javax.swing.JButton();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        guardianTable = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         mostFrOverviewPanel = new javax.swing.JPanel();
         teacherOverviewPanel = new javax.swing.JPanel();
@@ -905,14 +925,6 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         byQuarterPanel = new javax.swing.JPanel();
         jScrollPane11 = new javax.swing.JScrollPane();
         byQuarterTable = new javax.swing.JTable();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
-        studentIdGuardianSearchTextField = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
-        firstNameGuardianSearchTextField = new javax.swing.JTextField();
-        studentIdFilterButtonGuardians = new javax.swing.JButton();
-        jScrollPane7 = new javax.swing.JScrollPane();
-        guardianTable = new javax.swing.JTable();
         globalRefreshButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -974,7 +986,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addComponent(studentResetButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addStudentButton)
-                .addContainerGap(1160, Short.MAX_VALUE))
+                .addContainerGap(1148, Short.MAX_VALUE))
             .addGroup(studentsPanelLayout.createSequentialGroup()
                 .addComponent(jScrollPane1)
                 .addContainerGap())
@@ -1056,7 +1068,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                         .addComponent(teacherResetButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addTeacherButton)
-                        .addContainerGap(1157, Short.MAX_VALUE))))
+                        .addContainerGap(1143, Short.MAX_VALUE))))
         );
         teachersPanelLayout.setVerticalGroup(
             teachersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1223,7 +1235,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             .addGroup(communityPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(1057, Short.MAX_VALUE))
+                .addContainerGap(1058, Short.MAX_VALUE))
         );
         communityPanelLayout.setVerticalGroup(
             communityPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1265,7 +1277,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(homeroomTeacherIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(1057, Short.MAX_VALUE))
+                .addContainerGap(1058, Short.MAX_VALUE))
         );
         homeroomPanelLayout.setVerticalGroup(
             homeroomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1367,6 +1379,85 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         );
 
         guardianPanel.addTab("Medication", medicationPanel);
+
+        jLabel9.setText("Student ID");
+
+        studentIdGuardianSearchTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                studentIdGuardianSearchTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                studentIdGuardianSearchTextFieldKeyTyped(evt);
+            }
+        });
+
+        jLabel10.setText("First Name");
+
+        firstNameGuardianSearchTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                firstNameGuardianSearchTextFieldActionPerformed(evt);
+            }
+        });
+        firstNameGuardianSearchTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                firstNameGuardianSearchTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                firstNameGuardianSearchTextFieldKeyTyped(evt);
+            }
+        });
+
+        studentIdFilterButtonGuardians.setText("Filter");
+        studentIdFilterButtonGuardians.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                studentIdFilterButtonGuardiansActionPerformed(evt);
+            }
+        });
+
+        guardianTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "First Name", "Last Name", "Student ID", "Phone", "Address", "Email", "Relationship"
+            }
+        ));
+        jScrollPane7.setViewportView(guardianTable);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(firstNameGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(studentIdGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(studentIdFilterButtonGuardians)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 1522, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(11, 11, 11)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(firstNameGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9)
+                    .addComponent(studentIdGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(studentIdFilterButtonGuardians))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(239, Short.MAX_VALUE))
+        );
+
+        guardianPanel.addTab("Guardians", jPanel2);
 
         mostFrOverviewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Most Focus Reports"));
 
@@ -1657,7 +1748,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addComponent(byTimeOfDayPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(byQuarterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(168, Short.MAX_VALUE))
+                .addContainerGap(141, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1693,85 +1784,6 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         );
 
         guardianPanel.addTab("Overview", jPanel1);
-
-        jLabel9.setText("Student ID");
-
-        studentIdGuardianSearchTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                studentIdGuardianSearchTextFieldKeyPressed(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                studentIdGuardianSearchTextFieldKeyTyped(evt);
-            }
-        });
-
-        jLabel10.setText("First Name");
-
-        firstNameGuardianSearchTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                firstNameGuardianSearchTextFieldActionPerformed(evt);
-            }
-        });
-        firstNameGuardianSearchTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                firstNameGuardianSearchTextFieldKeyPressed(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                firstNameGuardianSearchTextFieldKeyTyped(evt);
-            }
-        });
-
-        studentIdFilterButtonGuardians.setText("Filter");
-        studentIdFilterButtonGuardians.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                studentIdFilterButtonGuardiansActionPerformed(evt);
-            }
-        });
-
-        guardianTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "First Name", "Last Name", "Student ID", "Phone", "Address", "Email", "Relationship"
-            }
-        ));
-        jScrollPane7.setViewportView(guardianTable);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(firstNameGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(studentIdGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(studentIdFilterButtonGuardians)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 1522, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(firstNameGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9)
-                    .addComponent(studentIdGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(studentIdFilterButtonGuardians))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(239, Short.MAX_VALUE))
-        );
-
-        guardianPanel.addTab("Guardians", jPanel2);
 
         globalRefreshButton.setText("Refresh");
         globalRefreshButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1984,9 +1996,109 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
       JTextField studentIDField = new JTextField(9);
       JTextField fNameField = new JTextField(15);
       JTextField lNameField = new JTextField(15);
-      JTextField DOBField = new JTextField(8);
+      JTextField DOBField = new JTextField(10);
       JTextField homeroomField = new JTextField(3);
-
+      
+      //Jack's input validation code begin
+      studentIDField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(studentIDField.getText().length() >= 9){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      fNameField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(fNameField.getText().length() >= 45){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      lNameField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(lNameField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      DOBField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == '/') || (enter >='0') && (enter <= '9'))){
+                    evt.consume();
+                }
+                if(DOBField.getText().length() >= 10)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      homeroomField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(homeroomField.getText().length() >= 3)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      //Jack's input validation code end
+      
       JPanel myPanel = new JPanel();
       myPanel.add(new JLabel("Student ID:"));
       myPanel.add(studentIDField);
@@ -2040,7 +2152,87 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
       JTextField fNameField = new JTextField(15);
       JTextField lNameField = new JTextField(15);
       JTextField subjectField = new JTextField(8);
-
+      
+      //Jack's input validation code begin
+      teacherIDField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(teacherIDField.getText().length() >= 9){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      fNameField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(fNameField.getText().length() >= 45){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      lNameField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(lNameField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      subjectField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ' ') || Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(subjectField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+             public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      //Jack's input validation code end
+      
       JPanel myPanel = new JPanel();
       myPanel.add(new JLabel("Teacher ID:"));
       myPanel.add(teacherIDField);
@@ -2098,6 +2290,192 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
       JTextField typeField = new JTextField(9);
       JTextArea commLeaderDebriefArea = new JTextArea(5, 20);
       commLeaderDebriefArea.setLineWrap(true);
+         
+      //Jack's input validation code begin
+      studentIDField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(studentIDField.getText().length() >= 9){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      teacherIDField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(teacherIDField.getText().length() >= 8){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      timeInField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ':') || Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(timeInField.getText().length() >= 5)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      timeOutField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ':') || Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(timeOutField.getText().length() >= 5)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      dateField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == '-') || Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(dateField.getText().length() >= 10)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      teacherDescriptionArea.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ' ') || (enter == ':') || (enter == '/') || (enter == '?') || (enter == '.') || (enter == ',') || (enter == '"') ||
+                    Character.isAlphabetic(enter) || Character.isDigit(enter)))
+                {    
+                    evt.consume();
+                }
+                if(teacherDescriptionArea.getText().length() >= 140)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      studentResponseArea.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ' ') || (enter == ':') || (enter == '/') || (enter == '?') || (enter == '.') || (enter == ',') || (enter == '"') ||
+                    Character.isAlphabetic(enter) || Character.isDigit(enter)))
+                {    
+                    evt.consume();
+                }
+                if(studentResponseArea.getText().length() >= 140)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+     typeField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ' ') || Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(typeField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+     
+      commLeaderDebriefArea.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ' ') || (enter == ':') || (enter == '/') || (enter == '?') || (enter == '.') || (enter == ',') || (enter == '"') ||
+                    Character.isAlphabetic(enter) || Character.isDigit(enter)))
+                {    
+                    evt.consume();
+                }
+                if(commLeaderDebriefArea.getText().length() >= 140)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      //Jack's input validation code end
       
       JPanel myPanel = new JPanel();
       myPanel.add(new JLabel("Student ID:"));
@@ -2325,6 +2703,147 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
       JTextField sideEffectsField = new JTextField(15);
       JTextField administeredField = new JTextField(15);
       JTextField medicationIDField = new JTextField(15);
+      
+      //Jack's input validation code begin
+      studentIDField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(studentIDField.getText().length() >= 9){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      clinicalNameField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(clinicalNameField.getText().length() >= 45){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      brandNameField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(brandNameField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      dosageField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter) || Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(dosageField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      sideEffectsField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter) || (enter == ' '))){
+                    evt.consume();
+                }
+                if(sideEffectsField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      administeredField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter) || (enter == ' '))){
+                    evt.consume();
+                }
+                if(administeredField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+            
+      medicationIDField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(medicationIDField.getText().length() >= 4)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      //Jack's input validation code end
+      
       Object[] inputFields = {"Student ID:", studentIDField, "Clinical Name:", clinicalNameField,
                                 "Brand Name:", brandNameField, "Dosage:", dosageField, 
                                 "Side Effects: ", sideEffectsField, "Administered:", administeredField,
