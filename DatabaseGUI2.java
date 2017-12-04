@@ -1323,7 +1323,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addComponent(byTimeOfDayPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(byQuarterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(168, Short.MAX_VALUE))
+                .addContainerGap(110, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1345,8 +1345,8 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(mostFrOverviewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(72, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1453,6 +1453,11 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
         jLabel21.setText("Last Name");
 
+        DOBDisplayTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DOBDisplayTextFieldActionPerformed(evt);
+            }
+        });
         DOBDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 DOBDisplayTextFieldKeyPressed(evt);
@@ -2735,7 +2740,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(globalRefreshButton)
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addGap(55, 55, 55))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2993,7 +2998,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
       DOBField.addKeyListener(new KeyAdapter(){
             public void keyTyped(KeyEvent evt) {  
                 char enter = evt.getKeyChar();
-                if(!((enter == '/') || (enter >='0') && (enter <= '9'))){
+                if(!((enter == '-') || (enter >='0') && (enter <= '9'))){
                     evt.consume();
                 }
                 if(DOBField.getText().length() >= 10)
@@ -4667,7 +4672,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
     private void DOBDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DOBDisplayTextFieldKeyTyped
         char enter = evt.getKeyChar();
-        if(!((enter == '/') || (enter >='0') && (enter <= '9'))){
+        if(!((enter == '-') || (enter >='0') && (enter <= '9'))){
             evt.consume();
         }
         if(DOBDisplayTextField.getText().length() >= 10)
@@ -5563,6 +5568,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private void phoneGDisplayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phoneGDisplayTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_phoneGDisplayTextFieldActionPerformed
+
+    private void DOBDisplayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DOBDisplayTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_DOBDisplayTextFieldActionPerformed
     
     
     /**
