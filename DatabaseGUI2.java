@@ -946,7 +946,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         homeroomNoTextField = new javax.swing.JTextField();
         jScrollPane5 = new javax.swing.JScrollPane();
         homeroomTable = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        HomeroomSearchButton = new javax.swing.JButton();
         HomeroomRefreshButton = new javax.swing.JButton();
         medicationPanel = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
@@ -983,6 +983,21 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         guardianTable = new javax.swing.JTable();
         addGuardianButton = new javax.swing.JButton();
         guardianRefreshButton = new javax.swing.JButton();
+        jLabel44 = new javax.swing.JLabel();
+        jLabel45 = new javax.swing.JLabel();
+        jLabel46 = new javax.swing.JLabel();
+        jLabel47 = new javax.swing.JLabel();
+        jLabel48 = new javax.swing.JLabel();
+        jLabel49 = new javax.swing.JLabel();
+        jLabel50 = new javax.swing.JLabel();
+        fNameGDisplayTextField = new javax.swing.JTextField();
+        lNameGDisplayTextField = new javax.swing.JTextField();
+        sidGDisplayTextField = new javax.swing.JTextField();
+        phoneGDisplayTextField = new javax.swing.JTextField();
+        addressGDisplayTextField = new javax.swing.JTextField();
+        emailGDisplayTextField = new javax.swing.JTextField();
+        relationshipGDisplayTextField = new javax.swing.JTextField();
+        guardianUpdateButton = new javax.swing.JButton();
         globalRefreshButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1502,7 +1517,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                     .addComponent(homeroomDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(studentTableUpdateButton)
-                .addContainerGap(155, Short.MAX_VALUE))
+                .addContainerGap(178, Short.MAX_VALUE))
         );
 
         guardianPanel.addTab("Students", studentsPanel);
@@ -1671,7 +1686,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                     .addComponent(teacherSubjectDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(teacherUpdateButton)
-                .addContainerGap(161, Short.MAX_VALUE))
+                .addContainerGap(184, Short.MAX_VALUE))
         );
 
         guardianPanel.addTab("Teachers", teachersPanel);
@@ -1896,73 +1911,75 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(focusReportsPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 1498, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3))
                     .addGroup(focusReportsPanelLayout.createSequentialGroup()
                         .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(focusReportsPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel3)
+                                .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(sidFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel28))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(studentIdFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel29)
+                                    .addComponent(tidFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(teacherFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(timeInFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dateFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel30)
+                                    .addComponent(timeInFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(focusReportSearchButton)
-                                .addGap(6, 6, 6)
-                                .addComponent(focusReportRefreshButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(createFocusReportButton))
+                                .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel31)
+                                    .addComponent(timeOutFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, Short.MAX_VALUE)
+                                .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel32)
+                                    .addComponent(dateFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(focusReportsUpdateButton))
+                        .addGap(18, 18, 18)
+                        .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, focusReportsPanelLayout.createSequentialGroup()
+                                .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18))
                             .addGroup(focusReportsPanelLayout.createSequentialGroup()
-                                .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(focusReportsPanelLayout.createSequentialGroup()
-                                        .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(sidFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel28))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(tidFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel29))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(focusReportsPanelLayout.createSequentialGroup()
-                                                .addComponent(timeInFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(timeOutFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(dateFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(focusReportsPanelLayout.createSequentialGroup()
-                                                .addComponent(jLabel30)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jLabel31)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel32))))
-                                    .addComponent(focusReportsUpdateButton))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel33))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane13, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel34))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(typeFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel35))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel36)
-                                    .addComponent(debriefFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 380, Short.MAX_VALUE)))
+                                .addComponent(jLabel33)
+                                .addGap(104, 104, 104)))
+                        .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel34)
+                            .addComponent(jScrollPane13, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(focusReportsPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel35)
+                                .addGap(148, 148, 148)
+                                .addComponent(jLabel36))
+                            .addGroup(focusReportsPanelLayout.createSequentialGroup()
+                                .addComponent(typeFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(debriefFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(11, 11, 11))
+                    .addGroup(focusReportsPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(studentIdFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(teacherFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(timeInFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dateFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(focusReportSearchButton)
+                        .addGap(6, 6, 6)
+                        .addComponent(focusReportRefreshButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(createFocusReportButton)
+                        .addGap(288, 288, 288)))
                 .addContainerGap())
         );
         focusReportsPanelLayout.setVerticalGroup(
@@ -2010,7 +2027,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                         .addGap(36, 36, 36)
                         .addComponent(focusReportsUpdateButton))
                     .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(87, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         guardianPanel.addTab("Focus Reports", focusReportsPanel);
@@ -2039,7 +2056,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             .addGroup(communityPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(267, Short.MAX_VALUE))
+                .addContainerGap(290, Short.MAX_VALUE))
         );
 
         guardianPanel.addTab("Community", communityPanel);
@@ -2062,10 +2079,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         ));
         jScrollPane5.setViewportView(homeroomTable);
 
-        jButton1.setText("Filter");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        HomeroomSearchButton.setText("Filter");
+        HomeroomSearchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                HomeroomSearchButtonActionPerformed(evt);
             }
         });
 
@@ -2088,7 +2105,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(homeroomNoTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
+                        .addComponent(HomeroomSearchButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(HomeroomRefreshButton))
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -2101,11 +2118,11 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addGroup(homeroomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(homeroomNoTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1)
+                    .addComponent(HomeroomSearchButton)
                     .addComponent(HomeroomRefreshButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(241, Short.MAX_VALUE))
+                .addContainerGap(261, Short.MAX_VALUE))
         );
 
         guardianPanel.addTab("Homeroom", homeroomPanel);
@@ -2356,7 +2373,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                     .addComponent(midMDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(medicationUpdateButton)
-                .addContainerGap(143, Short.MAX_VALUE))
+                .addContainerGap(164, Short.MAX_VALUE))
         );
 
         guardianPanel.addTab("Medication", medicationPanel);
@@ -2403,6 +2420,11 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 "First Name", "Last Name", "Student ID", "Phone", "Address", "Email", "Relationship"
             }
         ));
+        guardianTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                guardianTableMouseClicked(evt);
+            }
+        });
         jScrollPane7.setViewportView(guardianTable);
 
         addGuardianButton.setText("Add");
@@ -2419,27 +2441,154 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             }
         });
 
+        jLabel44.setText("First Name");
+
+        jLabel45.setText("Last Name");
+
+        jLabel46.setText("Student ID");
+
+        jLabel47.setText("Phone");
+
+        jLabel48.setText("Address");
+
+        jLabel49.setText("Email");
+
+        jLabel50.setText("Relationship");
+
+        fNameGDisplayTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fNameGDisplayTextFieldActionPerformed(evt);
+            }
+        });
+        fNameGDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                fNameGDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                fNameGDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        lNameGDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                lNameGDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                lNameGDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        sidGDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                sidGDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                sidGDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        phoneGDisplayTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                phoneGDisplayTextFieldActionPerformed(evt);
+            }
+        });
+        phoneGDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                phoneGDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                phoneGDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        addressGDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                addressGDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                addressGDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        emailGDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                emailGDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                emailGDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        relationshipGDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                relationshipGDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                relationshipGDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        guardianUpdateButton.setText("Update");
+        guardianUpdateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                guardianUpdateButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 1522, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(firstNameGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(studentIdGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(studentIdFilterButtonGuardians)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addGuardianButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(guardianRefreshButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 1522, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(firstNameGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(studentIdGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(studentIdFilterButtonGuardians)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addGuardianButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(guardianRefreshButton))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fNameGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel44))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel45)
+                            .addComponent(lNameGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel46)
+                                .addGap(80, 80, 80)
+                                .addComponent(jLabel47))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(sidGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(phoneGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(addressGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel48))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(emailGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel49))
+                        .addGap(11, 11, 11)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel50)
+                            .addComponent(relationshipGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(guardianUpdateButton))
+                .addContainerGap(348, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2455,12 +2604,32 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                     .addComponent(guardianRefreshButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(239, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel44)
+                    .addComponent(jLabel45)
+                    .addComponent(jLabel46)
+                    .addComponent(jLabel47)
+                    .addComponent(jLabel48)
+                    .addComponent(jLabel49)
+                    .addComponent(jLabel50))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fNameGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lNameGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sidGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(phoneGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addressGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(emailGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(relationshipGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(guardianUpdateButton)
+                .addContainerGap(159, Short.MAX_VALUE))
         );
 
         guardianPanel.addTab("Guardians", jPanel2);
 
-        globalRefreshButton.setText("Refresh");
+        globalRefreshButton.setText("Refresh All");
         globalRefreshButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 globalRefreshButtonActionPerformed(evt);
@@ -2474,7 +2643,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(guardianPanel, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(guardianPanel)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(globalRefreshButton)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -3970,6 +4139,148 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
       JTextField addressField = new JTextField(15);
       JTextField emailField = new JTextField(15);
       JTextField relationshipField = new JTextField(15);
+      
+      //Jack's input validation code begin
+      firstNameField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(firstNameField.getText().length() >= 45){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      lastNameField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(lastNameField.getText().length() >= 45){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      sidField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(sidField.getText().length() >= 9)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      phoneField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(phoneField.getText().length() >= 10)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      addressField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter) || Character.isAlphabetic(enter) || (enter == '.') || (enter == ',') || (enter == ' '))){
+                    evt.consume();
+                }
+                if(addressField.getText().length() >= 140)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      emailField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter) || Character.isAlphabetic(enter) || (enter == '.') || (enter == '@') || (enter == '-') || (enter == '_'))){
+                    evt.consume();
+                }
+                if(emailField.getText().length() >= 140)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+            
+      relationshipField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter) || (enter == ' '))){
+                    evt.consume();
+                }
+                if(relationshipField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      //Jack's input validation code end
+      
+      
       Object[] inputFields = {"First Name:", firstNameField, "Last Name:", lastNameField,
                                 "Student ID:", sidField, "Phone:", phoneField, 
                                 "Address: ", addressField, "Email:", emailField,
@@ -4198,7 +4509,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_studentIdDisplayTextFieldKeyPressed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void HomeroomSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HomeroomSearchButtonActionPerformed
         Statement st = null;
         ResultSet rs = null;
         DefaultTableModel model = (DefaultTableModel) homeroomTable.getModel();
@@ -4219,7 +4530,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         } catch(Exception e){ 
             e.printStackTrace();
         }  
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_HomeroomSearchButtonActionPerformed
 
     private void firstNameDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_firstNameDisplayTextFieldKeyPressed
         if(evt.isControlDown()) //prevent further action when ctrl pressed
@@ -4890,6 +5201,280 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_HomeroomRefreshButtonActionPerformed
+
+    private void fNameGDisplayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fNameGDisplayTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fNameGDisplayTextFieldActionPerformed
+
+    private void guardianTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_guardianTableMouseClicked
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) guardianTable.getModel();
+        int selectedRowIndex = guardianTable.getSelectedRow();
+        
+        
+        fNameGDisplayTextField.setText(model.getValueAt(selectedRowIndex, 0).toString());
+        lNameGDisplayTextField.setText(model.getValueAt(selectedRowIndex, 1).toString());
+        sidGDisplayTextField.setText(model.getValueAt(selectedRowIndex, 2).toString());
+        phoneGDisplayTextField.setText(model.getValueAt(selectedRowIndex, 3).toString());
+        addressGDisplayTextField.setText(model.getValueAt(selectedRowIndex, 4).toString());
+        emailGDisplayTextField.setText(model.getValueAt(selectedRowIndex, 5).toString());
+        relationshipGDisplayTextField.setText(model.getValueAt(selectedRowIndex, 6).toString());
+    }//GEN-LAST:event_guardianTableMouseClicked
+
+    private void guardianUpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardianUpdateButtonActionPerformed
+        PreparedStatement ps = null;
+        int row = guardianTable.getSelectedRow();
+        String fName = guardianTable.getModel().getValueAt(row, 0).toString();
+        String sid = guardianTable.getModel().getValueAt(row, 2).toString();
+        String query = "UPDATE Guardian SET F_Name = ?, L_Name = ?, S_ID = ?, "
+        + " Phone = ?, Address = ?, Email = ?, Relationship = ? "
+        + " WHERE S_ID = " + sid + " AND F_Name = '" + fName + "'";
+        try{
+            ps = con.prepareStatement(query);
+            ps.setString(1, fNameGDisplayTextField.getText());
+            ps.setString(2, lNameGDisplayTextField.getText());
+            ps.setString(3, sidGDisplayTextField.getText());
+            ps.setString(4, phoneGDisplayTextField.getText());
+            ps.setString(5, addressGDisplayTextField.getText());
+            ps.setString(6, emailGDisplayTextField.getText());
+            ps.setString(7, relationshipGDisplayTextField.getText());
+            ps.executeUpdate();
+            DefaultTableModel model = (DefaultTableModel) guardianTable.getModel();
+            model.setRowCount(0);
+            showGuardians();
+        }
+        catch(Exception e){
+            System.out.println("Error with Update");
+        }
+        finally{
+            if(ps != null){
+                try {
+                    ps.close();
+                }
+
+                catch (SQLException ex) {
+                    Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }//GEN-LAST:event_guardianUpdateButtonActionPerformed
+
+    private void fNameGDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fNameGDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_fNameGDisplayTextFieldKeyPressed
+
+    private void fNameGDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fNameGDisplayTextFieldKeyTyped
+        // only accept Alphabetic
+        char enter = evt.getKeyChar();
+        if(!(Character.isAlphabetic(enter))){
+            evt.consume();
+        }
+        
+        if(fNameGDisplayTextField.getText().length() >= 45){
+            evt.consume();
+        }
+    }//GEN-LAST:event_fNameGDisplayTextFieldKeyTyped
+
+    private void lNameGDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lNameGDisplayTextFieldKeyPressed
+        // TODO add your handling code here:
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_lNameGDisplayTextFieldKeyPressed
+
+    private void lNameGDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lNameGDisplayTextFieldKeyTyped
+        // only accept Alphabetic
+        char enter = evt.getKeyChar();
+        if(!(Character.isAlphabetic(enter))){
+            evt.consume();
+        }
+        
+        if(lNameGDisplayTextField.getText().length() >= 45){
+            evt.consume();
+        }
+    }//GEN-LAST:event_lNameGDisplayTextFieldKeyTyped
+
+    private void sidGDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sidGDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_sidGDisplayTextFieldKeyPressed
+
+    private void sidGDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sidGDisplayTextFieldKeyTyped
+        // TODO add your handling code here:
+        // only accept integer
+        char enter = evt.getKeyChar();
+        if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+        
+        if(sidGDisplayTextField.getText().length() >= 9){
+            evt.consume();
+        }
+    }//GEN-LAST:event_sidGDisplayTextFieldKeyTyped
+
+    private void phoneGDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phoneGDisplayTextFieldKeyPressed
+        // TODO add your handling code here:
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_phoneGDisplayTextFieldKeyPressed
+
+    private void phoneGDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phoneGDisplayTextFieldKeyTyped
+        char enter = evt.getKeyChar();
+        if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+        if(phoneGDisplayTextField.getText().length() >= 10)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_phoneGDisplayTextFieldKeyTyped
+
+    private void addressGDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_addressGDisplayTextFieldKeyPressed
+        // TODO add your handling code here:
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_addressGDisplayTextFieldKeyPressed
+
+    private void addressGDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_addressGDisplayTextFieldKeyTyped
+        // TODO add your handling code here:
+        char enter = evt.getKeyChar();
+        if(!((enter == ' ') || (enter == '.') || (enter == ',') ||
+        Character.isAlphabetic(enter) || Character.isDigit(enter)))
+        {    
+            evt.consume();
+        }
+        if(addressGDisplayTextField.getText().length() >= 140)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_addressGDisplayTextFieldKeyTyped
+
+    private void emailGDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_emailGDisplayTextFieldKeyPressed
+        // TODO add your handling code here:
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_emailGDisplayTextFieldKeyPressed
+
+    private void emailGDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_emailGDisplayTextFieldKeyTyped
+        // TODO add your handling code here:
+        char enter = evt.getKeyChar();
+        if(!((enter == '_') || (enter == '.') || (enter == '@') || (enter == '-') ||
+        Character.isAlphabetic(enter) || Character.isDigit(enter)))
+        {    
+            evt.consume();
+        }
+        if(emailGDisplayTextField.getText().length() >= 140)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_emailGDisplayTextFieldKeyTyped
+
+    private void relationshipGDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_relationshipGDisplayTextFieldKeyPressed
+        // TODO add your handling code here:
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_relationshipGDisplayTextFieldKeyPressed
+
+    private void relationshipGDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_relationshipGDisplayTextFieldKeyTyped
+        // TODO add your handling code here:
+        char enter = evt.getKeyChar();
+        if(!((enter == ' ') || Character.isAlphabetic(enter) ))
+        {    
+            evt.consume();
+        }
+        if(relationshipGDisplayTextField.getText().length() >= 140)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_relationshipGDisplayTextFieldKeyTyped
+
+    private void phoneGDisplayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phoneGDisplayTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_phoneGDisplayTextFieldActionPerformed
     
     
     /**
@@ -4934,10 +5519,12 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField DOBDisplayTextField;
     private javax.swing.JButton HomeroomRefreshButton;
+    private javax.swing.JButton HomeroomSearchButton;
     private javax.swing.JButton addGuardianButton;
     private javax.swing.JButton addMedicationButton;
     private javax.swing.JButton addStudentButton;
     private javax.swing.JButton addTeacherButton;
+    private javax.swing.JTextField addressGDisplayTextField;
     private javax.swing.JTextField adminsteredMDisplayTextField;
     private javax.swing.JTextField bNameMDisplayTextField;
     private javax.swing.JPanel byDayOfTheWeekPanel;
@@ -4959,6 +5546,8 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private javax.swing.JTextField dateFrSearchField;
     private javax.swing.JTextField debriefFrDisplayTextField;
     private javax.swing.JTextField doseMDisplayTextField;
+    private javax.swing.JTextField emailGDisplayTextField;
+    private javax.swing.JTextField fNameGDisplayTextField;
     private javax.swing.JTextField firstNameDisplayTextField;
     private javax.swing.JTextField firstNameGuardianSearchTextField;
     private javax.swing.JButton focusReportRefreshButton;
@@ -4970,13 +5559,13 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private javax.swing.JTabbedPane guardianPanel;
     private javax.swing.JButton guardianRefreshButton;
     private javax.swing.JTable guardianTable;
+    private javax.swing.JButton guardianUpdateButton;
     private javax.swing.JTextField homeroomDisplayTextField;
     private javax.swing.JTextField homeroomNoTextField;
     private javax.swing.JPanel homeroomOverviewPanel;
     private javax.swing.JPanel homeroomPanel;
     private javax.swing.JLabel homeroomRoomNoLabel;
     private javax.swing.JTable homeroomTable;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -5015,7 +5604,14 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel42;
     private javax.swing.JLabel jLabel43;
+    private javax.swing.JLabel jLabel44;
+    private javax.swing.JLabel jLabel45;
+    private javax.swing.JLabel jLabel46;
+    private javax.swing.JLabel jLabel47;
+    private javax.swing.JLabel jLabel48;
+    private javax.swing.JLabel jLabel49;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel50;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -5036,6 +5632,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
+    private javax.swing.JTextField lNameGDisplayTextField;
     private javax.swing.JTextField lastNameDisplayTextField;
     private javax.swing.JTextField medicationIDMedicationTextField;
     private javax.swing.JPanel medicationPanel;
@@ -5044,7 +5641,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private javax.swing.JButton medicationUpdateButton;
     private javax.swing.JTextField midMDisplayTextField;
     private javax.swing.JPanel mostFrOverviewPanel;
+    private javax.swing.JTextField phoneGDisplayTextField;
+    private javax.swing.JTextField relationshipGDisplayTextField;
     private javax.swing.JTextField sidFrDisplayTextField;
+    private javax.swing.JTextField sidGDisplayTextField;
     private javax.swing.JTextField sidMDisplayTextField;
     private javax.swing.JTextField sideEffectsMDisplayTextField;
     private javax.swing.JTextField studentIDMedicationTextField;
