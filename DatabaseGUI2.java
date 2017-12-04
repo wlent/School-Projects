@@ -6,6 +6,8 @@
 
 
 import java.awt.HeadlessException;
+import java.awt.event.KeyEvent; //for prevent copy and paste (press crtl, alt, shift key)
+import java.awt.event.KeyAdapter; //add function input validation
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -50,6 +52,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         sort_community_table();      
         sort_homeroom_table();
         sort_medication_table();
+        sort_guardian_table();
         printHrMostFr();
         printTeacherMostFr();
         printStudentMostFr();
@@ -814,6 +817,12 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model);
         medicationTable.setRowSorter(sorter);
     }
+    
+    public void sort_guardian_table(){
+        DefaultTableModel model = (DefaultTableModel) guardianTable.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model);
+        guardianTable.setRowSorter(sorter);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -928,14 +937,17 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         jLabel34 = new javax.swing.JLabel();
         jLabel35 = new javax.swing.JLabel();
         jLabel36 = new javax.swing.JLabel();
+        focusReportsUpdateButton = new javax.swing.JButton();
         communityPanel = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         communityTable = new javax.swing.JTable();
         homeroomPanel = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
-        homeroomTeacherIDTextField = new javax.swing.JTextField();
+        homeroomNoTextField = new javax.swing.JTextField();
         jScrollPane5 = new javax.swing.JScrollPane();
         homeroomTable = new javax.swing.JTable();
+        HomeroomSearchButton = new javax.swing.JButton();
+        HomeroomRefreshButton = new javax.swing.JButton();
         medicationPanel = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         studentIDMedicationTextField = new javax.swing.JTextField();
@@ -945,6 +957,22 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         addMedicationButton = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         medicationIDMedicationTextField = new javax.swing.JTextField();
+        medicationRefreshButton = new javax.swing.JButton();
+        jLabel37 = new javax.swing.JLabel();
+        jLabel38 = new javax.swing.JLabel();
+        jLabel39 = new javax.swing.JLabel();
+        jLabel40 = new javax.swing.JLabel();
+        jLabel41 = new javax.swing.JLabel();
+        sidMDisplayTextField = new javax.swing.JTextField();
+        cNameMDisplayTextField = new javax.swing.JTextField();
+        bNameMDisplayTextField = new javax.swing.JTextField();
+        doseMDisplayTextField = new javax.swing.JTextField();
+        sideEffectsMDisplayTextField = new javax.swing.JTextField();
+        medicationUpdateButton = new javax.swing.JButton();
+        jLabel42 = new javax.swing.JLabel();
+        adminsteredMDisplayTextField = new javax.swing.JTextField();
+        jLabel43 = new javax.swing.JLabel();
+        midMDisplayTextField = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         studentIdGuardianSearchTextField = new javax.swing.JTextField();
@@ -954,6 +982,22 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         jScrollPane7 = new javax.swing.JScrollPane();
         guardianTable = new javax.swing.JTable();
         addGuardianButton = new javax.swing.JButton();
+        guardianRefreshButton = new javax.swing.JButton();
+        jLabel44 = new javax.swing.JLabel();
+        jLabel45 = new javax.swing.JLabel();
+        jLabel46 = new javax.swing.JLabel();
+        jLabel47 = new javax.swing.JLabel();
+        jLabel48 = new javax.swing.JLabel();
+        jLabel49 = new javax.swing.JLabel();
+        jLabel50 = new javax.swing.JLabel();
+        fNameGDisplayTextField = new javax.swing.JTextField();
+        lNameGDisplayTextField = new javax.swing.JTextField();
+        sidGDisplayTextField = new javax.swing.JTextField();
+        phoneGDisplayTextField = new javax.swing.JTextField();
+        addressGDisplayTextField = new javax.swing.JTextField();
+        emailGDisplayTextField = new javax.swing.JTextField();
+        relationshipGDisplayTextField = new javax.swing.JTextField();
+        guardianUpdateButton = new javax.swing.JButton();
         globalRefreshButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1128,7 +1172,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Day", "# "
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane8.setViewportView(byDayOfTheWeekTable);
 
         javax.swing.GroupLayout byDayOfTheWeekPanelLayout = new javax.swing.GroupLayout(byDayOfTheWeekPanel);
@@ -1157,7 +1209,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Month", "Year", "#"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane9.setViewportView(byMonthAndYearTable);
 
         javax.swing.GroupLayout byMonthAndYearPanelLayout = new javax.swing.GroupLayout(byMonthAndYearPanel);
@@ -1186,7 +1246,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Hour", "#"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane10.setViewportView(byTimeOfDayTable);
 
         javax.swing.GroupLayout byTimeOfDayPanelLayout = new javax.swing.GroupLayout(byTimeOfDayPanel);
@@ -1215,7 +1283,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Quarter", "#"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane11.setViewportView(byQuarterTable);
 
         javax.swing.GroupLayout byQuarterPanelLayout = new javax.swing.GroupLayout(byQuarterPanel);
@@ -1302,7 +1378,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Student ID", "First Name", "Last Name", "D.O.B.", "Homeroom", "# of Focus Reports", "Community", "Common FR Type"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         studentTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 studentTableMouseClicked(evt);
@@ -1331,11 +1415,52 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             }
         });
 
+        studentIdDisplayTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                studentIdDisplayTextFieldActionPerformed(evt);
+            }
+        });
+        studentIdDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                studentIdDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                studentIdDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
         jLabel13.setText("Student ID");
+
+        firstNameDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                firstNameDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                firstNameDisplayTextFieldKeyTyped(evt);
+            }
+        });
 
         jLabel20.setText("First Name");
 
+        lastNameDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                lastNameDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                lastNameDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
         jLabel21.setText("Last Name");
+
+        DOBDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                DOBDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                DOBDisplayTextFieldKeyTyped(evt);
+            }
+        });
 
         jLabel22.setText("D.O.B.");
 
@@ -1343,6 +1468,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         studentTableUpdateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 studentTableUpdateButtonActionPerformed(evt);
+            }
+        });
+
+        homeroomDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                homeroomDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                homeroomDisplayTextFieldKeyTyped(evt);
             }
         });
 
@@ -1423,7 +1557,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                     .addComponent(homeroomDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(studentTableUpdateButton)
-                .addContainerGap(155, Short.MAX_VALUE))
+                .addContainerGap(178, Short.MAX_VALUE))
         );
 
         guardianPanel.addTab("Students", studentsPanel);
@@ -1446,7 +1580,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Teacher ID", "First Name", "Last Name", "Subject", "# of Focus Reports", "Common FR Type"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         teacherTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 teacherTableMouseClicked(evt);
@@ -1472,6 +1614,42 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         addTeacherButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addTeacherButtonActionPerformed(evt);
+            }
+        });
+
+        teacherIdDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                teacherIdDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                teacherIdDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        teacherFirstNameDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                teacherFirstNameDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                teacherFirstNameDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        teacherLastNameDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                teacherLastNameDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                teacherLastNameDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        teacherSubjectDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                teacherSubjectDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                teacherSubjectDisplayTextFieldKeyTyped(evt);
             }
         });
 
@@ -1556,13 +1734,18 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                     .addComponent(teacherSubjectDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(teacherUpdateButton)
-                .addContainerGap(161, Short.MAX_VALUE))
+                .addContainerGap(184, Short.MAX_VALUE))
         );
 
         guardianPanel.addTab("Teachers", teachersPanel);
 
         jLabel3.setText("Student ID");
 
+        studentIdFrSearchField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                studentIdFrSearchFieldActionPerformed(evt);
+            }
+        });
         studentIdFrSearchField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 studentIdFrSearchFieldKeyPressed(evt);
@@ -1574,6 +1757,11 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
         jLabel4.setText("Time In");
 
+        timeInFrSearchField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                timeInFrSearchFieldActionPerformed(evt);
+            }
+        });
         timeInFrSearchField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 timeInFrSearchFieldKeyPressed(evt);
@@ -1601,7 +1789,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Student ID", "Teacher ID", "Time In", "Time Out", "Date", "Teacher Description", "Student Response", "Type", "Debrief", "Quarter"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         focusReportsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 focusReportsTableMouseClicked(evt);
@@ -1616,14 +1812,14 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             }
         });
 
-        createFocusReportButton.setText("Create");
+        createFocusReportButton.setText("Add");
         createFocusReportButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 createFocusReportButtonActionPerformed(evt);
             }
         });
 
-        focusReportRefreshButton.setText("Refresh");
+        focusReportRefreshButton.setText("Reset");
         focusReportRefreshButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 focusReportRefreshButtonActionPerformed(evt);
@@ -1641,19 +1837,102 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             }
         });
 
+        sidFrDisplayTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sidFrDisplayTextFieldActionPerformed(evt);
+            }
+        });
+        sidFrDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                sidFrDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                sidFrDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        tidFrDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tidFrDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tidFrDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        timeInFrDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                timeInFrDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                timeInFrDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
         timeOutFrDisplayTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 timeOutFrDisplayTextFieldActionPerformed(evt);
             }
         });
+        timeOutFrDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                timeOutFrDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                timeOutFrDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        dateFrDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                dateFrDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                dateFrDisplayTextFieldKeyTyped(evt);
+            }
+        });
 
         teacherDescriptionFrDisplayTextArea.setColumns(20);
         teacherDescriptionFrDisplayTextArea.setRows(5);
+        teacherDescriptionFrDisplayTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                teacherDescriptionFrDisplayTextAreaKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                teacherDescriptionFrDisplayTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane12.setViewportView(teacherDescriptionFrDisplayTextArea);
 
         studentResponseFrDisplayTextArea.setColumns(20);
         studentResponseFrDisplayTextArea.setRows(5);
+        studentResponseFrDisplayTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                studentResponseFrDisplayTextAreaKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                studentResponseFrDisplayTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane13.setViewportView(studentResponseFrDisplayTextArea);
+
+        typeFrDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                typeFrDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                typeFrDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        debriefFrDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                debriefFrDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                debriefFrDisplayTextFieldKeyTyped(evt);
+            }
+        });
 
         jLabel28.setText("Student ID");
 
@@ -1673,77 +1952,90 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
         jLabel36.setText("Debrief");
 
+        focusReportsUpdateButton.setText("Update");
+        focusReportsUpdateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                focusReportsUpdateButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout focusReportsPanelLayout = new javax.swing.GroupLayout(focusReportsPanel);
         focusReportsPanel.setLayout(focusReportsPanelLayout);
         focusReportsPanelLayout.setHorizontalGroup(
             focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(focusReportsPanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 1498, Short.MAX_VALUE)
+                    .addGroup(focusReportsPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane3))
                     .addGroup(focusReportsPanelLayout.createSequentialGroup()
                         .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(focusReportsPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(studentIdFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(teacherFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(timeInFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dateFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(focusReportSearchButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(createFocusReportButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(focusReportRefreshButton))
                             .addGroup(focusReportsPanelLayout.createSequentialGroup()
                                 .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(sidFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel28))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tidFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel29))
+                                    .addComponent(jLabel29)
+                                    .addComponent(tidFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(focusReportsPanelLayout.createSequentialGroup()
-                                        .addComponent(timeInFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(timeOutFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(dateFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(focusReportsPanelLayout.createSequentialGroup()
-                                        .addComponent(jLabel30)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jLabel31)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel32)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabel30)
+                                    .addComponent(timeInFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel33))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabel31)
+                                    .addComponent(timeOutFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, Short.MAX_VALUE)
                                 .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane13, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel34))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(typeFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel35))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel36)
-                                    .addComponent(debriefFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                    .addComponent(jLabel32)
+                                    .addComponent(dateFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(focusReportsUpdateButton))
+                        .addGap(18, 18, 18)
+                        .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, focusReportsPanelLayout.createSequentialGroup()
+                                .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18))
+                            .addGroup(focusReportsPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel33)
+                                .addGap(104, 104, 104)))
+                        .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel34)
+                            .addComponent(jScrollPane13, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(focusReportsPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel35)
+                                .addGap(148, 148, 148)
+                                .addComponent(jLabel36))
+                            .addGroup(focusReportsPanelLayout.createSequentialGroup()
+                                .addComponent(typeFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(debriefFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(11, 11, 11))
+                    .addGroup(focusReportsPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(studentIdFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(teacherFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(timeInFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dateFrSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(focusReportSearchButton)
+                        .addGap(6, 6, 6)
+                        .addComponent(focusReportRefreshButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(createFocusReportButton)
+                        .addGap(288, 288, 288)))
                 .addContainerGap())
         );
         focusReportsPanelLayout.setVerticalGroup(
@@ -1781,15 +2073,17 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                     .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(typeFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(debriefFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(focusReportsPanelLayout.createSequentialGroup()
+                        .addGroup(focusReportsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(sidFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tidFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(timeInFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(timeOutFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(dateFrDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(86, Short.MAX_VALUE))
+                        .addGap(36, 36, 36)
+                        .addComponent(focusReportsUpdateButton))
+                    .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         guardianPanel.addTab("Focus Reports", focusReportsPanel);
@@ -1801,7 +2095,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Community Name", "Leader ID", "# of Focus Reports"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane4.setViewportView(communityTable);
 
         javax.swing.GroupLayout communityPanelLayout = new javax.swing.GroupLayout(communityPanel);
@@ -1810,24 +2112,24 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             communityPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(communityPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(1057, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 557, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(982, Short.MAX_VALUE))
         );
         communityPanelLayout.setVerticalGroup(
             communityPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(communityPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(38, 38, 38)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(267, Short.MAX_VALUE))
+                .addContainerGap(262, Short.MAX_VALUE))
         );
 
         guardianPanel.addTab("Community", communityPanel);
 
-        jLabel6.setText("Teacher ID");
+        jLabel6.setText("Room Number:");
 
-        homeroomTeacherIDTextField.addActionListener(new java.awt.event.ActionListener() {
+        homeroomNoTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                homeroomTeacherIDTextFieldActionPerformed(evt);
+                homeroomNoTextFieldActionPerformed(evt);
             }
         });
 
@@ -1838,8 +2140,30 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Room Number", "Teacher", "Community", "# of Focus Reports"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane5.setViewportView(homeroomTable);
+
+        HomeroomSearchButton.setText("Filter");
+        HomeroomSearchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                HomeroomSearchButtonActionPerformed(evt);
+            }
+        });
+
+        HomeroomRefreshButton.setText("Reset");
+        HomeroomRefreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                HomeroomRefreshButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout homeroomPanelLayout = new javax.swing.GroupLayout(homeroomPanel);
         homeroomPanel.setLayout(homeroomPanelLayout);
@@ -1848,12 +2172,16 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             .addGroup(homeroomPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(homeroomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(homeroomPanelLayout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(homeroomTeacherIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(1057, Short.MAX_VALUE))
+                        .addComponent(homeroomNoTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(HomeroomSearchButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(HomeroomRefreshButton)))
+                .addContainerGap(981, Short.MAX_VALUE))
         );
         homeroomPanelLayout.setVerticalGroup(
             homeroomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1861,16 +2189,23 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(homeroomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(homeroomTeacherIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(homeroomNoTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(HomeroomSearchButton)
+                    .addComponent(HomeroomRefreshButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(242, Short.MAX_VALUE))
+                .addContainerGap(261, Short.MAX_VALUE))
         );
 
         guardianPanel.addTab("Homeroom", homeroomPanel);
 
         jLabel7.setText("Student ID");
 
+        studentIDMedicationTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                studentIDMedicationTextFieldActionPerformed(evt);
+            }
+        });
         studentIDMedicationTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 studentIDMedicationTextFieldKeyPressed(evt);
@@ -1887,7 +2222,20 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "Student ID", "Clinical Name", "Brand Name", "Dosage", "Side Effects", "Adminstered", "Medication ID"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        medicationTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                medicationTableMouseClicked(evt);
+            }
+        });
         jScrollPane6.setViewportView(medicationTable);
 
         studentSearchButtonMedTable.setText("Filter");
@@ -1915,6 +2263,102 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             }
         });
 
+        medicationRefreshButton.setText("Reset");
+        medicationRefreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                medicationRefreshButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel37.setText("Student ID");
+
+        jLabel38.setText("Clinical Name");
+
+        jLabel39.setText("Brand Name");
+
+        jLabel40.setText("Dosage");
+
+        jLabel41.setText("Side Effects");
+
+        sidMDisplayTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sidMDisplayTextFieldActionPerformed(evt);
+            }
+        });
+        sidMDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                sidMDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                sidMDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        cNameMDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cNameMDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                cNameMDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        bNameMDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                bNameMDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                bNameMDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        doseMDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                doseMDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                doseMDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        sideEffectsMDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                sideEffectsMDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                sideEffectsMDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        medicationUpdateButton.setText("Update");
+        medicationUpdateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                medicationUpdateButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel42.setText("Administered");
+
+        adminsteredMDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                adminsteredMDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                adminsteredMDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        jLabel43.setText("Medication ID");
+
+        midMDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                midMDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                midMDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
         javax.swing.GroupLayout medicationPanelLayout = new javax.swing.GroupLayout(medicationPanel);
         medicationPanel.setLayout(medicationPanelLayout);
         medicationPanelLayout.setHorizontalGroup(
@@ -1922,21 +2366,58 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             .addGroup(medicationPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(medicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 1498, Short.MAX_VALUE)
                     .addGroup(medicationPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel7)
+                        .addGroup(medicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 1502, Short.MAX_VALUE)
+                            .addGroup(medicationPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(studentIDMedicationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel12)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(medicationIDMedicationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(studentSearchButtonMedTable)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(addMedicationButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(medicationRefreshButton)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())
+                    .addGroup(medicationPanelLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(medicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel37)
+                            .addComponent(medicationUpdateButton)
+                            .addComponent(sidMDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(studentIDMedicationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel12)
+                        .addGroup(medicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel38)
+                            .addComponent(cNameMDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(6, 6, 6)
+                        .addGroup(medicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel39)
+                            .addComponent(bNameMDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(4, 4, 4)
+                        .addGroup(medicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(doseMDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel40))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(medicationIDMedicationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(studentSearchButtonMedTable)
+                        .addGroup(medicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel41)
+                            .addComponent(sideEffectsMDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addMedicationButton)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGroup(medicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(medicationPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel42)
+                                .addGap(62, 62, 62)
+                                .addComponent(jLabel43))
+                            .addGroup(medicationPanelLayout.createSequentialGroup()
+                                .addComponent(adminsteredMDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(midMDisplayTextField)))
+                        .addContainerGap(766, Short.MAX_VALUE))))
         );
         medicationPanelLayout.setVerticalGroup(
             medicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1948,10 +2429,31 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                     .addComponent(studentSearchButtonMedTable)
                     .addComponent(addMedicationButton)
                     .addComponent(jLabel12)
-                    .addComponent(medicationIDMedicationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(medicationIDMedicationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(medicationRefreshButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(240, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(medicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel37)
+                    .addComponent(jLabel38)
+                    .addComponent(jLabel39)
+                    .addComponent(jLabel40)
+                    .addComponent(jLabel41)
+                    .addComponent(jLabel42)
+                    .addComponent(jLabel43))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(medicationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sidMDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cNameMDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bNameMDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(doseMDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sideEffectsMDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(adminsteredMDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(midMDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(medicationUpdateButton)
+                .addContainerGap(164, Short.MAX_VALUE))
         );
 
         guardianPanel.addTab("Medication", medicationPanel);
@@ -1997,7 +2499,20 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             new String [] {
                 "First Name", "Last Name", "Student ID", "Phone", "Address", "Email", "Relationship"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        guardianTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                guardianTableMouseClicked(evt);
+            }
+        });
         jScrollPane7.setViewportView(guardianTable);
 
         addGuardianButton.setText("Add");
@@ -2007,25 +2522,161 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             }
         });
 
+        guardianRefreshButton.setText("Reset");
+        guardianRefreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                guardianRefreshButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel44.setText("First Name");
+
+        jLabel45.setText("Last Name");
+
+        jLabel46.setText("Student ID");
+
+        jLabel47.setText("Phone");
+
+        jLabel48.setText("Address");
+
+        jLabel49.setText("Email");
+
+        jLabel50.setText("Relationship");
+
+        fNameGDisplayTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fNameGDisplayTextFieldActionPerformed(evt);
+            }
+        });
+        fNameGDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                fNameGDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                fNameGDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        lNameGDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                lNameGDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                lNameGDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        sidGDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                sidGDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                sidGDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        phoneGDisplayTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                phoneGDisplayTextFieldActionPerformed(evt);
+            }
+        });
+        phoneGDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                phoneGDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                phoneGDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        addressGDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                addressGDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                addressGDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        emailGDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                emailGDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                emailGDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        relationshipGDisplayTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                relationshipGDisplayTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                relationshipGDisplayTextFieldKeyTyped(evt);
+            }
+        });
+
+        guardianUpdateButton.setText("Update");
+        guardianUpdateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                guardianUpdateButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 1522, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(firstNameGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(studentIdGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(studentIdFilterButtonGuardians)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addGuardianButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 1522, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(firstNameGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(studentIdGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(studentIdFilterButtonGuardians)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addGuardianButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(guardianRefreshButton))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fNameGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel44))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel45)
+                            .addComponent(lNameGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel46)
+                                .addGap(80, 80, 80)
+                                .addComponent(jLabel47))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(sidGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(phoneGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(addressGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel48))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(emailGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel49))
+                        .addGap(11, 11, 11)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel50)
+                            .addComponent(relationshipGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(guardianUpdateButton))
+                .addContainerGap(348, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2037,15 +2688,36 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                     .addComponent(jLabel9)
                     .addComponent(studentIdGuardianSearchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(studentIdFilterButtonGuardians)
-                    .addComponent(addGuardianButton))
+                    .addComponent(addGuardianButton)
+                    .addComponent(guardianRefreshButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(239, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel44)
+                    .addComponent(jLabel45)
+                    .addComponent(jLabel46)
+                    .addComponent(jLabel47)
+                    .addComponent(jLabel48)
+                    .addComponent(jLabel49)
+                    .addComponent(jLabel50))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fNameGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lNameGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sidGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(phoneGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addressGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(emailGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(relationshipGDisplayTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(guardianUpdateButton)
+                .addContainerGap(159, Short.MAX_VALUE))
         );
 
         guardianPanel.addTab("Guardians", jPanel2);
 
-        globalRefreshButton.setText("Refresh");
+        globalRefreshButton.setText("Refresh All");
         globalRefreshButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 globalRefreshButtonActionPerformed(evt);
@@ -2059,7 +2731,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(guardianPanel, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(guardianPanel)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(globalRefreshButton)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -2248,9 +2920,9 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_focusReportSearchButtonActionPerformed
 
-    private void homeroomTeacherIDTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeroomTeacherIDTextFieldActionPerformed
+    private void homeroomNoTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeroomNoTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_homeroomTeacherIDTextFieldActionPerformed
+    }//GEN-LAST:event_homeroomNoTextFieldActionPerformed
 
     private void addStudentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addStudentButtonActionPerformed
       JTextField studentIDField = new JTextField(9);
@@ -2258,6 +2930,106 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
       JTextField lNameField = new JTextField(15);
       JTextField DOBField = new JTextField(8);
       JTextField homeroomField = new JTextField(3);
+      
+      //Jack's input validation code begin
+      studentIDField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(studentIDField.getText().length() >= 9){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      fNameField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(fNameField.getText().length() >= 45){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      lNameField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(lNameField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      DOBField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == '/') || (enter >='0') && (enter <= '9'))){
+                    evt.consume();
+                }
+                if(DOBField.getText().length() >= 10)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      homeroomField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(homeroomField.getText().length() >= 3)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      //Jack's input validation code end
 
       JPanel myPanel = new JPanel();
       myPanel.add(new JLabel("Student ID:"));
@@ -2313,6 +3085,86 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
       JTextField lNameField = new JTextField(15);
       JTextField subjectField = new JTextField(8);
 
+      //Jack's input validation code begin
+      teacherIDField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(teacherIDField.getText().length() >= 9){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      fNameField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(fNameField.getText().length() >= 45){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      lNameField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(lNameField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      subjectField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ' ') || Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(subjectField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+             public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      //Jack's input validation code end
+      
       JPanel myPanel = new JPanel();
       myPanel.add(new JLabel("Teacher ID:"));
       myPanel.add(teacherIDField);
@@ -2370,6 +3222,192 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
       JTextField typeField = new JTextField(9);
       JTextArea commLeaderDebriefArea = new JTextArea(5, 20);
       commLeaderDebriefArea.setLineWrap(true);
+      
+      //Jack's input validation code begin
+      studentIDField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(studentIDField.getText().length() >= 9){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      teacherIDField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(teacherIDField.getText().length() >= 8){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      timeInField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ':') || Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(timeInField.getText().length() >= 8)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      timeOutField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ':') || Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(timeOutField.getText().length() >= 8)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      dateField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == '-') || Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(dateField.getText().length() >= 10)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      teacherDescriptionArea.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ' ') || (enter == ':') || (enter == '/') || (enter == '?') || (enter == '.') || (enter == ',') || (enter == '"') ||
+                    Character.isAlphabetic(enter) || Character.isDigit(enter)))
+                {    
+                    evt.consume();
+                }
+                if(teacherDescriptionArea.getText().length() >= 140)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      studentResponseArea.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ' ') || (enter == ':') || (enter == '/') || (enter == '?') || (enter == '.') || (enter == ',') || (enter == '"') ||
+                    Character.isAlphabetic(enter) || Character.isDigit(enter)))
+                {    
+                    evt.consume();
+                }
+                if(studentResponseArea.getText().length() >= 140)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+     typeField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ' ') || Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(typeField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+     
+      commLeaderDebriefArea.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ' ') || (enter == ':') || (enter == '/') || (enter == '?') || (enter == '.') || (enter == ',') || (enter == '"') ||
+                    Character.isAlphabetic(enter) || Character.isDigit(enter)))
+                {    
+                    evt.consume();
+                }
+                if(commLeaderDebriefArea.getText().length() >= 140)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      //Jack's input validation code end
       
       JPanel myPanel = new JPanel();
       myPanel.add(new JLabel("Student ID:"));
@@ -2597,6 +3635,147 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
       JTextField sideEffectsField = new JTextField(15);
       JTextField administeredField = new JTextField(15);
       JTextField medicationIDField = new JTextField(15);
+      
+      //Jack's input validation code begin
+      studentIDField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(studentIDField.getText().length() >= 9){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      clinicalNameField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ' ') || Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(clinicalNameField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+            
+      brandNameField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ' ') || Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(brandNameField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+                  
+      dosageField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ' ') || Character.isAlphabetic(enter) || Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(dosageField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+                        
+      sideEffectsField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ' ') || Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(sideEffectsField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+                              
+      administeredField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!((enter == ' ') || Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(administeredField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+                                    
+      medicationIDField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(medicationIDField.getText().length() >= 4){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      //Jack's input validation code end
+      
       Object[] inputFields = {"Student ID:", studentIDField, "Clinical Name:", clinicalNameField,
                                 "Brand Name:", brandNameField, "Dosage:", dosageField, 
                                 "Side Effects: ", sideEffectsField, "Administered:", administeredField,
@@ -2664,6 +3843,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         if(!(Character.isDigit(enter))){
             evt.consume();
         }
+        
+        if(studentIDTextField.getText().length() >= 9){
+            evt.consume();
+        }
     }//GEN-LAST:event_studentIDTextFieldKeyTyped
 
     private void teacherIDTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherIDTextFieldKeyPressed
@@ -2687,6 +3870,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         // only accept integer
         char enter = evt.getKeyChar();
         if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+        
+        if(teacherIDTextField.getText().length() >= 8){
             evt.consume();
         }
     }//GEN-LAST:event_teacherIDTextFieldKeyTyped
@@ -2714,6 +3901,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         if(!(Character.isDigit(enter))){
             evt.consume();
         }
+        
+        if(studentIdFrSearchField.getText().length() >= 9){
+            evt.consume();
+        }
     }//GEN-LAST:event_studentIdFrSearchFieldKeyTyped
 
     private void teacherFrSearchFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherFrSearchFieldKeyPressed
@@ -2737,6 +3928,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         // only accept integer
         char enter = evt.getKeyChar();
         if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+        
+        if(teacherFrSearchField.getText().length() >= 8){
             evt.consume();
         }
     }//GEN-LAST:event_teacherFrSearchFieldKeyTyped
@@ -2766,6 +3961,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         if(!((enter == ':') || (enter >='0') && (enter <= '9'))){
             evt.consume();
         }
+        
+        if(timeInFrSearchField.getText().length() >= 8){
+            evt.consume();
+        }
     }//GEN-LAST:event_timeInFrSearchFieldKeyTyped
 
     private void dateFrSearchFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateFrSearchFieldKeyPressed
@@ -2789,6 +3988,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         // only accept integer and '-'hyphen
         char enter = evt.getKeyChar();
         if(!((enter == '-') || (enter >='0') && (enter <= '9'))){
+            evt.consume();
+        }
+        
+        if(dateFrSearchField.getText().length() >= 10){
             evt.consume();
         }
     }//GEN-LAST:event_dateFrSearchFieldKeyTyped
@@ -2816,6 +4019,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         if(!(Character.isAlphabetic(enter))){
             evt.consume();
         }
+        
+        if(firstNameGuardianSearchTextField.getText().length() >= 45){
+            evt.consume();
+        }
     }//GEN-LAST:event_firstNameGuardianSearchTextFieldKeyTyped
 
     private void studentIdGuardianSearchTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentIdGuardianSearchTextFieldKeyPressed
@@ -2839,6 +4046,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         // only accept integer
         char enter = evt.getKeyChar();
         if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+        
+        if(studentIdGuardianSearchTextField.getText().length() >= 9){
             evt.consume();
         }
     }//GEN-LAST:event_studentIdGuardianSearchTextFieldKeyTyped
@@ -2866,6 +4077,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         if(!(Character.isDigit(enter))){
             evt.consume();
         }
+        
+        if(studentIDMedicationTextField.getText().length() >= 9){
+            evt.consume();
+        }
     }//GEN-LAST:event_studentIDMedicationTextFieldKeyTyped
 
     private void medicationIDMedicationTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_medicationIDMedicationTextFieldKeyPressed
@@ -2889,6 +4104,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         // only accept integer
         char enter = evt.getKeyChar();
         if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+        
+        if(medicationIDMedicationTextField.getText().length() >= 4){
             evt.consume();
         }
     }//GEN-LAST:event_medicationIDMedicationTextFieldKeyTyped
@@ -3008,6 +4227,148 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
       JTextField addressField = new JTextField(15);
       JTextField emailField = new JTextField(15);
       JTextField relationshipField = new JTextField(15);
+      
+      //Jack's input validation code begin
+      firstNameField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(firstNameField.getText().length() >= 45){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste(Ctrl+V)
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      lastNameField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter))){
+                    evt.consume();
+                }
+                if(lastNameField.getText().length() >= 45){
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      sidField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(sidField.getText().length() >= 9)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      phoneField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(phoneField.getText().length() >= 10)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      addressField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter) || Character.isAlphabetic(enter) || (enter == '.') || (enter == ',') || (enter == ' '))){
+                    evt.consume();
+                }
+                if(addressField.getText().length() >= 140)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      
+      emailField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter) || Character.isAlphabetic(enter) || (enter == '.') || (enter == '@') || (enter == '-') || (enter == '_'))){
+                    evt.consume();
+                }
+                if(emailField.getText().length() >= 140)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+            
+      relationshipField.addKeyListener(new KeyAdapter(){
+            public void keyTyped(KeyEvent evt) {  
+                char enter = evt.getKeyChar();
+                if(!(Character.isAlphabetic(enter) || (enter == ' '))){
+                    evt.consume();
+                }
+                if(relationshipField.getText().length() >= 45)
+                {
+                    evt.consume();
+                }
+            }
+            
+            public void keyPressed(KeyEvent evt){
+                if(evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) //prevent paste
+                {
+                    evt.consume();
+                }
+            }
+      });
+      //Jack's input validation code end
+      
+      
       Object[] inputFields = {"First Name:", firstNameField, "Last Name:", lastNameField,
                                 "Student ID:", sidField, "Phone:", phoneField, 
                                 "Address: ", addressField, "Email:", emailField,
@@ -3015,7 +4376,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
       
 
       int result = JOptionPane.showConfirmDialog(null, inputFields, 
-               "New Medication", JOptionPane.OK_CANCEL_OPTION);
+               "New Guardian", JOptionPane.OK_CANCEL_OPTION);
       if (result == JOptionPane.OK_OPTION) {
         PreparedStatement ps = null;
         try{
@@ -3047,6 +4408,1161 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         }
       }
     }//GEN-LAST:event_addGuardianButtonActionPerformed
+
+    private void focusReportsUpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_focusReportsUpdateButtonActionPerformed
+        PreparedStatement ps = null;
+        int row = focusReportsTable.getSelectedRow();
+        String sid = focusReportsTable.getModel().getValueAt(row, 0).toString();
+        String tid = focusReportsTable.getModel().getValueAt(row, 1).toString();
+        String timeIn = focusReportsTable.getModel().getValueAt(row, 2).toString();
+        String date = focusReportsTable.getModel().getValueAt(row, 4).toString();
+        String query = "UPDATE Focus_Report SET S_ID = ?, T_ID = ?, Time_In = ?, "
+        + " Time_Out = ?, Date = ?, Teacher_Description = ?, Student_Response = ?, "
+        + " Type = ?, Comm_Leader_Debrief = ? WHERE S_ID = " + sid + " AND T_ID = " + tid +
+        " AND Time_In = '" + timeIn + "' AND Date = '" + date + "'";
+        try{
+            ps = con.prepareStatement(query);
+            ps.setString(1, sidFrDisplayTextField.getText());
+            ps.setString(2, tidFrDisplayTextField.getText());
+            ps.setString(3, timeInFrDisplayTextField.getText());
+            ps.setString(4, timeOutFrDisplayTextField.getText());
+            ps.setString(5, dateFrDisplayTextField.getText());
+            ps.setString(6, teacherDescriptionFrDisplayTextArea.getText());
+            ps.setString(7, studentResponseFrDisplayTextArea.getText());
+            ps.setString(8, typeFrDisplayTextField.getText());
+            ps.setString(9, debriefFrDisplayTextField.getText());
+            ps.executeUpdate();
+            DefaultTableModel model = (DefaultTableModel) focusReportsTable.getModel();
+            model.setRowCount(0);
+            showFocusReports();
+        }
+        catch(Exception e){
+            System.out.println("Error with Update");
+        }
+        finally{
+            if(ps != null){
+                try {
+                    ps.close();
+                }
+
+                catch (SQLException ex) {
+                    Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }//GEN-LAST:event_focusReportsUpdateButtonActionPerformed
+
+    private void sidFrDisplayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sidFrDisplayTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sidFrDisplayTextFieldActionPerformed
+
+    private void guardianRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardianRefreshButtonActionPerformed
+        DefaultTableModel model = (DefaultTableModel) guardianTable.getModel();
+        model.setRowCount(0);
+        try {
+            showGuardians();
+        } 
+        catch(SQLException ex) {
+            Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_guardianRefreshButtonActionPerformed
+
+    private void medicationRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_medicationRefreshButtonActionPerformed
+        DefaultTableModel model = (DefaultTableModel) medicationTable.getModel();
+        model.setRowCount(0);
+        try {
+            showMedication();
+        } 
+        catch(SQLException ex) {
+            Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_medicationRefreshButtonActionPerformed
+
+    private void studentIDMedicationTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_studentIDMedicationTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_studentIDMedicationTextFieldActionPerformed
+
+    private void sidMDisplayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sidMDisplayTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sidMDisplayTextFieldActionPerformed
+
+    private void medicationTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_medicationTableMouseClicked
+        DefaultTableModel model = (DefaultTableModel) medicationTable.getModel();
+        int selectedRowIndex = medicationTable.getSelectedRow();
+
+        sidMDisplayTextField.setText(model.getValueAt(selectedRowIndex, 0).toString());
+        cNameMDisplayTextField.setText(model.getValueAt(selectedRowIndex, 1).toString());
+        bNameMDisplayTextField.setText(model.getValueAt(selectedRowIndex, 2).toString());
+        doseMDisplayTextField.setText(model.getValueAt(selectedRowIndex, 3).toString());
+        sideEffectsMDisplayTextField.setText(model.getValueAt(selectedRowIndex, 4).toString());
+        adminsteredMDisplayTextField.setText(model.getValueAt(selectedRowIndex, 5).toString());
+        midMDisplayTextField.setText(model.getValueAt(selectedRowIndex, 6).toString());
+       
+    }//GEN-LAST:event_medicationTableMouseClicked
+
+    private void medicationUpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_medicationUpdateButtonActionPerformed
+        PreparedStatement ps = null;
+        int row = medicationTable.getSelectedRow();
+        String sid = medicationTable.getModel().getValueAt(row, 0).toString();
+        String mid = medicationTable.getModel().getValueAt(row, 6).toString();
+        String query = "UPDATE Medication SET S_ID = ?, Clinical_Name = ?, Brand_Name = ?, "
+        + " Dosage = ?, Side_Effects = ?, ADM_HS = ?, M_ID = ? "
+        + " WHERE S_ID = " + sid + " AND M_ID = " + mid;
+        try{
+            ps = con.prepareStatement(query);
+            ps.setString(1, sidMDisplayTextField.getText());
+            ps.setString(2, cNameMDisplayTextField.getText());
+            ps.setString(3, bNameMDisplayTextField.getText());
+            ps.setString(4, doseMDisplayTextField.getText());
+            ps.setString(5, sideEffectsMDisplayTextField.getText());
+            ps.setString(6, adminsteredMDisplayTextField.getText());
+            ps.setString(7, midMDisplayTextField.getText());
+            ps.executeUpdate();
+            DefaultTableModel model = (DefaultTableModel) medicationTable.getModel();
+            model.setRowCount(0);
+            showMedication();
+        }
+        catch(Exception e){
+            System.out.println("Error with Update");
+        }
+        finally{
+            if(ps != null){
+                try {
+                    ps.close();
+                }
+
+                catch (SQLException ex) {
+                    Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }//GEN-LAST:event_medicationUpdateButtonActionPerformed
+
+    private void studentIdFrSearchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_studentIdFrSearchFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_studentIdFrSearchFieldActionPerformed
+
+    private void timeInFrSearchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeInFrSearchFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_timeInFrSearchFieldActionPerformed
+
+    private void sidFrDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sidFrDisplayTextFieldKeyTyped
+        // only accept integer
+        char enter = evt.getKeyChar();
+        if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+        if(sidFrDisplayTextField.getText().length() >= 9){
+            evt.consume();
+        }
+    }//GEN-LAST:event_sidFrDisplayTextFieldKeyTyped
+
+    private void studentIdDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentIdDisplayTextFieldKeyTyped
+        // only accept integer
+        char enter = evt.getKeyChar();
+        if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+        if(studentIdDisplayTextField.getText().length() >= 9){
+            evt.consume();
+        }
+        
+    }//GEN-LAST:event_studentIdDisplayTextFieldKeyTyped
+
+    private void firstNameDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_firstNameDisplayTextFieldKeyTyped
+        // only accept alphabetic
+        char enter = evt.getKeyChar();
+        if(!(Character.isAlphabetic(enter))){
+            evt.consume();
+        }
+        if(firstNameDisplayTextField.getText().length() >= 45){
+            evt.consume();
+        }
+    }//GEN-LAST:event_firstNameDisplayTextFieldKeyTyped
+
+    private void studentIdDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentIdDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_studentIdDisplayTextFieldKeyPressed
+
+    private void HomeroomSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HomeroomSearchButtonActionPerformed
+        Statement st = null;
+        ResultSet rs = null;
+        DefaultTableModel model = (DefaultTableModel) homeroomTable.getModel();
+        model.setRowCount(0);
+        
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery("select * from Homeroom where Room_No like'%"+homeroomNoTextField.getText()+"%'");
+ 
+            while(rs.next()){
+                String Room_No = rs.getString(1);
+                String T_ID = rs.getString(2);
+                String Commnunity = rs.getString(3);
+                
+                Object[] content = {Room_No, T_ID, Commnunity};
+                model.addRow(content);                      
+            }    
+        } catch(Exception e){ 
+            e.printStackTrace();
+        }  
+    }//GEN-LAST:event_HomeroomSearchButtonActionPerformed
+
+    private void firstNameDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_firstNameDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_firstNameDisplayTextFieldKeyPressed
+
+    private void lastNameDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lastNameDisplayTextFieldKeyTyped
+        // only accept alphabetic
+        char enter = evt.getKeyChar();
+        if(!(Character.isAlphabetic(enter))){
+            evt.consume();
+        }
+        if(lastNameDisplayTextField.getText().length() >= 45){
+            evt.consume();
+        }
+    }//GEN-LAST:event_lastNameDisplayTextFieldKeyTyped
+
+    private void lastNameDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lastNameDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_lastNameDisplayTextFieldKeyPressed
+
+    private void DOBDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DOBDisplayTextFieldKeyTyped
+        char enter = evt.getKeyChar();
+        if(!((enter == '/') || (enter >='0') && (enter <= '9'))){
+            evt.consume();
+        }
+        if(DOBDisplayTextField.getText().length() >= 10)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_DOBDisplayTextFieldKeyTyped
+
+    private void DOBDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DOBDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_DOBDisplayTextFieldKeyPressed
+
+    private void homeroomDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_homeroomDisplayTextFieldKeyTyped
+        char enter = evt.getKeyChar();
+        if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+        if(homeroomDisplayTextField.getText().length() >= 3)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_homeroomDisplayTextFieldKeyTyped
+
+    private void homeroomDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_homeroomDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_homeroomDisplayTextFieldKeyPressed
+
+    private void teacherIdDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherIdDisplayTextFieldKeyTyped
+        // only accept integer
+        char enter = evt.getKeyChar();
+        if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+        if(teacherIdDisplayTextField.getText().length() >= 8){
+            evt.consume();
+        }
+    }//GEN-LAST:event_teacherIdDisplayTextFieldKeyTyped
+
+    private void teacherIdDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherIdDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_teacherIdDisplayTextFieldKeyPressed
+
+    private void teacherFirstNameDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherFirstNameDisplayTextFieldKeyTyped
+        // only accept alphabetic
+        char enter = evt.getKeyChar();
+        if(!(Character.isAlphabetic(enter))){
+            evt.consume();
+        }
+        if(teacherFirstNameDisplayTextField.getText().length() >= 45){
+            evt.consume();
+        }
+    }//GEN-LAST:event_teacherFirstNameDisplayTextFieldKeyTyped
+
+    private void teacherFirstNameDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherFirstNameDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_teacherFirstNameDisplayTextFieldKeyPressed
+
+    private void teacherLastNameDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherLastNameDisplayTextFieldKeyTyped
+        // only accept alphabetic
+        char enter = evt.getKeyChar();
+        if(!(Character.isAlphabetic(enter))){
+            evt.consume();
+        }
+        if(teacherLastNameDisplayTextField.getText().length() >= 45){
+            evt.consume();
+        }
+    }//GEN-LAST:event_teacherLastNameDisplayTextFieldKeyTyped
+
+    private void teacherLastNameDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherLastNameDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_teacherLastNameDisplayTextFieldKeyPressed
+
+    private void teacherSubjectDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherSubjectDisplayTextFieldKeyTyped
+        char enter = evt.getKeyChar();
+        if(!((enter == ' ') || Character.isAlphabetic(enter))){
+            evt.consume();
+        }
+        if(teacherSubjectDisplayTextField.getText().length() >= 45)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_teacherSubjectDisplayTextFieldKeyTyped
+
+    private void teacherSubjectDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherSubjectDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_teacherSubjectDisplayTextFieldKeyPressed
+
+    private void sidFrDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sidFrDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_sidFrDisplayTextFieldKeyPressed
+
+    private void tidFrDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tidFrDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_tidFrDisplayTextFieldKeyPressed
+
+    private void tidFrDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tidFrDisplayTextFieldKeyTyped
+        char enter = evt.getKeyChar();
+        if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+        if(tidFrDisplayTextField.getText().length() >= 8)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_tidFrDisplayTextFieldKeyTyped
+
+    private void timeInFrDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_timeInFrDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_timeInFrDisplayTextFieldKeyPressed
+
+    private void timeInFrDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_timeInFrDisplayTextFieldKeyTyped
+                char enter = evt.getKeyChar();
+                if(!((enter == ':') || Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(timeInFrDisplayTextField.getText().length() >= 8)
+                {
+                    evt.consume();
+                }
+    }//GEN-LAST:event_timeInFrDisplayTextFieldKeyTyped
+
+    private void timeOutFrDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_timeOutFrDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_timeOutFrDisplayTextFieldKeyPressed
+
+    private void timeOutFrDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_timeOutFrDisplayTextFieldKeyTyped
+        char enter = evt.getKeyChar();
+        if(!((enter == ':') || Character.isDigit(enter))){
+            evt.consume();
+        }
+        if(timeOutFrDisplayTextField.getText().length() >= 8)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_timeOutFrDisplayTextFieldKeyTyped
+
+    private void dateFrDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateFrDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_dateFrDisplayTextFieldKeyPressed
+
+    private void dateFrDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateFrDisplayTextFieldKeyTyped
+        char enter = evt.getKeyChar();
+        if(!((enter == '-') || Character.isDigit(enter))){
+            evt.consume();
+        }
+        if(dateFrDisplayTextField.getText().length() >= 10)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_dateFrDisplayTextFieldKeyTyped
+
+    private void teacherDescriptionFrDisplayTextAreaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherDescriptionFrDisplayTextAreaKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_teacherDescriptionFrDisplayTextAreaKeyPressed
+
+    private void teacherDescriptionFrDisplayTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_teacherDescriptionFrDisplayTextAreaKeyTyped
+        char enter = evt.getKeyChar();
+        if(!((enter == ' ') || (enter == ':') || (enter == '/') || (enter == '?') || (enter == '.') || (enter == ',') || (enter == '"') ||
+        Character.isAlphabetic(enter) || Character.isDigit(enter)))
+        {    
+            evt.consume();
+        }
+        if(teacherDescriptionFrDisplayTextArea.getText().length() >= 140)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_teacherDescriptionFrDisplayTextAreaKeyTyped
+
+    private void studentResponseFrDisplayTextAreaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentResponseFrDisplayTextAreaKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_studentResponseFrDisplayTextAreaKeyPressed
+
+    private void studentResponseFrDisplayTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_studentResponseFrDisplayTextAreaKeyTyped
+        char enter = evt.getKeyChar();
+        if(!((enter == ' ') || (enter == ':') || (enter == '/') || (enter == '?') || (enter == '.') || (enter == ',') || (enter == '"') ||
+        Character.isAlphabetic(enter) || Character.isDigit(enter)))
+        {    
+            evt.consume();
+        }
+        if(studentResponseFrDisplayTextArea.getText().length() >= 140)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_studentResponseFrDisplayTextAreaKeyTyped
+
+    private void typeFrDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_typeFrDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_typeFrDisplayTextFieldKeyPressed
+
+    private void typeFrDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_typeFrDisplayTextFieldKeyTyped
+        char enter = evt.getKeyChar();
+        if(!((enter == ' ') || (enter == ':') || (enter == '/') || (enter == '?') || (enter == '.') || (enter == ',') || (enter == '"') ||
+        Character.isAlphabetic(enter) || Character.isDigit(enter)))
+        {    
+            evt.consume();
+        }
+        if(typeFrDisplayTextField.getText().length() >= 140)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_typeFrDisplayTextFieldKeyTyped
+
+    private void debriefFrDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_debriefFrDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_debriefFrDisplayTextFieldKeyPressed
+
+    private void debriefFrDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_debriefFrDisplayTextFieldKeyTyped
+        char enter = evt.getKeyChar();
+        if(!((enter == ' ') || (enter == ':') || (enter == '/') || (enter == '?') || (enter == '.') || (enter == ',') || (enter == '"') ||
+        Character.isAlphabetic(enter) || Character.isDigit(enter)))
+        {    
+            evt.consume();
+        }
+        if(debriefFrDisplayTextField.getText().length() >= 140)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_debriefFrDisplayTextFieldKeyTyped
+
+    private void sidMDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sidMDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_sidMDisplayTextFieldKeyPressed
+
+    private void sidMDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sidMDisplayTextFieldKeyTyped
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(sidMDisplayTextField.getText().length() >= 9){
+                    evt.consume();
+                }
+    }//GEN-LAST:event_sidMDisplayTextFieldKeyTyped
+
+    private void cNameMDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cNameMDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_cNameMDisplayTextFieldKeyPressed
+
+    private void cNameMDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cNameMDisplayTextFieldKeyTyped
+        char enter = evt.getKeyChar();
+        if(!((enter == ' ') || Character.isAlphabetic(enter))){
+            evt.consume();
+        }
+        if(cNameMDisplayTextField.getText().length() >= 45)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_cNameMDisplayTextFieldKeyTyped
+
+    private void bNameMDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_bNameMDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_bNameMDisplayTextFieldKeyPressed
+
+    private void bNameMDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_bNameMDisplayTextFieldKeyTyped
+        char enter = evt.getKeyChar();
+        if(!((enter == ' ') || Character.isAlphabetic(enter))){
+            evt.consume();
+        }
+        if(bNameMDisplayTextField.getText().length() >= 45)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_bNameMDisplayTextFieldKeyTyped
+
+    private void doseMDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_doseMDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_doseMDisplayTextFieldKeyPressed
+
+    private void doseMDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_doseMDisplayTextFieldKeyTyped
+        char enter = evt.getKeyChar();
+        if(!((enter == ' ') || Character.isAlphabetic(enter) || Character.isDigit(enter))){
+            evt.consume();
+        }
+        if(doseMDisplayTextField.getText().length() >= 45)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_doseMDisplayTextFieldKeyTyped
+
+    private void sideEffectsMDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sideEffectsMDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_sideEffectsMDisplayTextFieldKeyPressed
+
+    private void sideEffectsMDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sideEffectsMDisplayTextFieldKeyTyped
+        char enter = evt.getKeyChar();
+        if(!((enter == ' ') || Character.isAlphabetic(enter))){
+            evt.consume();
+        }
+        if(sideEffectsMDisplayTextField.getText().length() >= 45)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_sideEffectsMDisplayTextFieldKeyTyped
+
+    private void adminsteredMDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_adminsteredMDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_adminsteredMDisplayTextFieldKeyPressed
+
+    private void adminsteredMDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_adminsteredMDisplayTextFieldKeyTyped
+        char enter = evt.getKeyChar();
+        if(!((enter == ' ') || Character.isAlphabetic(enter))){
+            evt.consume();
+        }
+        if(sideEffectsMDisplayTextField.getText().length() >= 45)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_adminsteredMDisplayTextFieldKeyTyped
+
+    private void midMDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_midMDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_midMDisplayTextFieldKeyPressed
+
+    private void midMDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_midMDisplayTextFieldKeyTyped
+                char enter = evt.getKeyChar();
+                if(!(Character.isDigit(enter))){
+                    evt.consume();
+                }
+                if(midMDisplayTextField.getText().length() >= 4){
+                    evt.consume();
+                }
+    }//GEN-LAST:event_midMDisplayTextFieldKeyTyped
+
+    private void studentIdDisplayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_studentIdDisplayTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_studentIdDisplayTextFieldActionPerformed
+
+    private void HomeroomRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HomeroomRefreshButtonActionPerformed
+        DefaultTableModel model = (DefaultTableModel) homeroomTable.getModel();
+        model.setRowCount(0);
+        try {
+            showHomerooms();
+        } catch (SQLException ex) {
+
+        }
+    }//GEN-LAST:event_HomeroomRefreshButtonActionPerformed
+
+    private void fNameGDisplayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fNameGDisplayTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fNameGDisplayTextFieldActionPerformed
+
+    private void guardianTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_guardianTableMouseClicked
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) guardianTable.getModel();
+        int selectedRowIndex = guardianTable.getSelectedRow();
+        
+        
+        fNameGDisplayTextField.setText(model.getValueAt(selectedRowIndex, 0).toString());
+        lNameGDisplayTextField.setText(model.getValueAt(selectedRowIndex, 1).toString());
+        sidGDisplayTextField.setText(model.getValueAt(selectedRowIndex, 2).toString());
+        phoneGDisplayTextField.setText(model.getValueAt(selectedRowIndex, 3).toString());
+        addressGDisplayTextField.setText(model.getValueAt(selectedRowIndex, 4).toString());
+        emailGDisplayTextField.setText(model.getValueAt(selectedRowIndex, 5).toString());
+        relationshipGDisplayTextField.setText(model.getValueAt(selectedRowIndex, 6).toString());
+    }//GEN-LAST:event_guardianTableMouseClicked
+
+    private void guardianUpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardianUpdateButtonActionPerformed
+        PreparedStatement ps = null;
+        int row = guardianTable.getSelectedRow();
+        String fName = guardianTable.getModel().getValueAt(row, 0).toString();
+        String sid = guardianTable.getModel().getValueAt(row, 2).toString();
+        String query = "UPDATE Guardian SET F_Name = ?, L_Name = ?, S_ID = ?, "
+        + " Phone = ?, Address = ?, Email = ?, Relationship = ? "
+        + " WHERE S_ID = " + sid + " AND F_Name = '" + fName + "'";
+        try{
+            ps = con.prepareStatement(query);
+            ps.setString(1, fNameGDisplayTextField.getText());
+            ps.setString(2, lNameGDisplayTextField.getText());
+            ps.setString(3, sidGDisplayTextField.getText());
+            ps.setString(4, phoneGDisplayTextField.getText());
+            ps.setString(5, addressGDisplayTextField.getText());
+            ps.setString(6, emailGDisplayTextField.getText());
+            ps.setString(7, relationshipGDisplayTextField.getText());
+            ps.executeUpdate();
+            DefaultTableModel model = (DefaultTableModel) guardianTable.getModel();
+            model.setRowCount(0);
+            showGuardians();
+        }
+        catch(Exception e){
+            System.out.println("Error with Update");
+        }
+        finally{
+            if(ps != null){
+                try {
+                    ps.close();
+                }
+
+                catch (SQLException ex) {
+                    Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }//GEN-LAST:event_guardianUpdateButtonActionPerformed
+
+    private void fNameGDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fNameGDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_fNameGDisplayTextFieldKeyPressed
+
+    private void fNameGDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fNameGDisplayTextFieldKeyTyped
+        // only accept Alphabetic
+        char enter = evt.getKeyChar();
+        if(!(Character.isAlphabetic(enter))){
+            evt.consume();
+        }
+        
+        if(fNameGDisplayTextField.getText().length() >= 45){
+            evt.consume();
+        }
+    }//GEN-LAST:event_fNameGDisplayTextFieldKeyTyped
+
+    private void lNameGDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lNameGDisplayTextFieldKeyPressed
+        // TODO add your handling code here:
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_lNameGDisplayTextFieldKeyPressed
+
+    private void lNameGDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lNameGDisplayTextFieldKeyTyped
+        // only accept Alphabetic
+        char enter = evt.getKeyChar();
+        if(!(Character.isAlphabetic(enter))){
+            evt.consume();
+        }
+        
+        if(lNameGDisplayTextField.getText().length() >= 45){
+            evt.consume();
+        }
+    }//GEN-LAST:event_lNameGDisplayTextFieldKeyTyped
+
+    private void sidGDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sidGDisplayTextFieldKeyPressed
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_sidGDisplayTextFieldKeyPressed
+
+    private void sidGDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sidGDisplayTextFieldKeyTyped
+        // TODO add your handling code here:
+        // only accept integer
+        char enter = evt.getKeyChar();
+        if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+        
+        if(sidGDisplayTextField.getText().length() >= 9){
+            evt.consume();
+        }
+    }//GEN-LAST:event_sidGDisplayTextFieldKeyTyped
+
+    private void phoneGDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phoneGDisplayTextFieldKeyPressed
+        // TODO add your handling code here:
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_phoneGDisplayTextFieldKeyPressed
+
+    private void phoneGDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phoneGDisplayTextFieldKeyTyped
+        char enter = evt.getKeyChar();
+        if(!(Character.isDigit(enter))){
+            evt.consume();
+        }
+        if(phoneGDisplayTextField.getText().length() >= 10)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_phoneGDisplayTextFieldKeyTyped
+
+    private void addressGDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_addressGDisplayTextFieldKeyPressed
+        // TODO add your handling code here:
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_addressGDisplayTextFieldKeyPressed
+
+    private void addressGDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_addressGDisplayTextFieldKeyTyped
+        // TODO add your handling code here:
+        char enter = evt.getKeyChar();
+        if(!((enter == ' ') || (enter == '.') || (enter == ',') ||
+        Character.isAlphabetic(enter) || Character.isDigit(enter)))
+        {    
+            evt.consume();
+        }
+        if(addressGDisplayTextField.getText().length() >= 140)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_addressGDisplayTextFieldKeyTyped
+
+    private void emailGDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_emailGDisplayTextFieldKeyPressed
+        // TODO add your handling code here:
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_emailGDisplayTextFieldKeyPressed
+
+    private void emailGDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_emailGDisplayTextFieldKeyTyped
+        // TODO add your handling code here:
+        char enter = evt.getKeyChar();
+        if(!((enter == '_') || (enter == '.') || (enter == '@') || (enter == '-') ||
+        Character.isAlphabetic(enter) || Character.isDigit(enter)))
+        {    
+            evt.consume();
+        }
+        if(emailGDisplayTextField.getText().length() >= 140)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_emailGDisplayTextFieldKeyTyped
+
+    private void relationshipGDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_relationshipGDisplayTextFieldKeyPressed
+        // TODO add your handling code here:
+        if(evt.isControlDown()) //prevent further action when ctrl pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isShiftDown()) //prevent further action when shift pressed
+        {
+            evt.consume();
+        }
+        
+        if(evt.isAltDown()) //prevent further action when alt pressed
+        {
+            evt.consume();  
+        }
+    }//GEN-LAST:event_relationshipGDisplayTextFieldKeyPressed
+
+    private void relationshipGDisplayTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_relationshipGDisplayTextFieldKeyTyped
+        // TODO add your handling code here:
+        char enter = evt.getKeyChar();
+        if(!((enter == ' ') || Character.isAlphabetic(enter) ))
+        {    
+            evt.consume();
+        }
+        if(relationshipGDisplayTextField.getText().length() >= 140)
+        {
+            evt.consume();
+        }
+    }//GEN-LAST:event_relationshipGDisplayTextFieldKeyTyped
+
+    private void phoneGDisplayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phoneGDisplayTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_phoneGDisplayTextFieldActionPerformed
     
     
     /**
@@ -3090,10 +5606,15 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField DOBDisplayTextField;
+    private javax.swing.JButton HomeroomRefreshButton;
+    private javax.swing.JButton HomeroomSearchButton;
     private javax.swing.JButton addGuardianButton;
     private javax.swing.JButton addMedicationButton;
     private javax.swing.JButton addStudentButton;
     private javax.swing.JButton addTeacherButton;
+    private javax.swing.JTextField addressGDisplayTextField;
+    private javax.swing.JTextField adminsteredMDisplayTextField;
+    private javax.swing.JTextField bNameMDisplayTextField;
     private javax.swing.JPanel byDayOfTheWeekPanel;
     private javax.swing.JTable byDayOfTheWeekTable;
     private javax.swing.JPanel byMonthAndYearPanel;
@@ -3102,6 +5623,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private javax.swing.JTable byQuarterTable;
     private javax.swing.JPanel byTimeOfDayPanel;
     private javax.swing.JTable byTimeOfDayTable;
+    private javax.swing.JTextField cNameMDisplayTextField;
     private javax.swing.JLabel communityNameOverviewLabel;
     private javax.swing.JLabel communityNumberOverviewLabel;
     private javax.swing.JPanel communityOverviewPanel;
@@ -3111,21 +5633,27 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private javax.swing.JTextField dateFrDisplayTextField;
     private javax.swing.JTextField dateFrSearchField;
     private javax.swing.JTextField debriefFrDisplayTextField;
+    private javax.swing.JTextField doseMDisplayTextField;
+    private javax.swing.JTextField emailGDisplayTextField;
+    private javax.swing.JTextField fNameGDisplayTextField;
     private javax.swing.JTextField firstNameDisplayTextField;
     private javax.swing.JTextField firstNameGuardianSearchTextField;
     private javax.swing.JButton focusReportRefreshButton;
     private javax.swing.JButton focusReportSearchButton;
     private javax.swing.JPanel focusReportsPanel;
     private javax.swing.JTable focusReportsTable;
+    private javax.swing.JButton focusReportsUpdateButton;
     private javax.swing.JButton globalRefreshButton;
     private javax.swing.JTabbedPane guardianPanel;
+    private javax.swing.JButton guardianRefreshButton;
     private javax.swing.JTable guardianTable;
+    private javax.swing.JButton guardianUpdateButton;
     private javax.swing.JTextField homeroomDisplayTextField;
+    private javax.swing.JTextField homeroomNoTextField;
     private javax.swing.JPanel homeroomOverviewPanel;
     private javax.swing.JPanel homeroomPanel;
     private javax.swing.JLabel homeroomRoomNoLabel;
     private javax.swing.JTable homeroomTable;
-    private javax.swing.JTextField homeroomTeacherIDTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -3156,8 +5684,22 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel40;
+    private javax.swing.JLabel jLabel41;
+    private javax.swing.JLabel jLabel42;
+    private javax.swing.JLabel jLabel43;
+    private javax.swing.JLabel jLabel44;
+    private javax.swing.JLabel jLabel45;
+    private javax.swing.JLabel jLabel46;
+    private javax.swing.JLabel jLabel47;
+    private javax.swing.JLabel jLabel48;
+    private javax.swing.JLabel jLabel49;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel50;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -3178,12 +5720,21 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
+    private javax.swing.JTextField lNameGDisplayTextField;
     private javax.swing.JTextField lastNameDisplayTextField;
     private javax.swing.JTextField medicationIDMedicationTextField;
     private javax.swing.JPanel medicationPanel;
+    private javax.swing.JButton medicationRefreshButton;
     private javax.swing.JTable medicationTable;
+    private javax.swing.JButton medicationUpdateButton;
+    private javax.swing.JTextField midMDisplayTextField;
     private javax.swing.JPanel mostFrOverviewPanel;
+    private javax.swing.JTextField phoneGDisplayTextField;
+    private javax.swing.JTextField relationshipGDisplayTextField;
     private javax.swing.JTextField sidFrDisplayTextField;
+    private javax.swing.JTextField sidGDisplayTextField;
+    private javax.swing.JTextField sidMDisplayTextField;
+    private javax.swing.JTextField sideEffectsMDisplayTextField;
     private javax.swing.JTextField studentIDMedicationTextField;
     private javax.swing.JButton studentIDSearchButton;
     private javax.swing.JTextField studentIDTextField;
