@@ -528,7 +528,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                 preparedStatement.setString(1, studentToCount);
                 count = preparedStatement.executeQuery();
                 if(count.first()){
-                    row[5] = count.getString("COUNT_SID");
+                    row[5] = count.getInt("COUNT_SID");
                 }
                 
                 row[0] = list.get(i).getS_ID();
@@ -612,7 +612,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
                                                 "FROM Focus_Report " +
                                                 "WHERE T_ID = " + teacherToCount);
                 if(count.first()){
-                    row[4] = count.getString("COUNT_TID");
+                    row[4] = count.getInt("COUNT_TID");
                 }
             }
             catch(Exception e){
@@ -781,11 +781,19 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             model.addRow(row);
         }
     }
+    public Class<?> getColumnClass(int columnIndex){
+        return Integer.class;
+    }
     
+           
     public void sort_student_table(){
+        
         DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model);
         studentTable.setRowSorter(sorter);
+        
+        
+                
     }
     
     public void sort_teacher_table(){
@@ -2760,6 +2768,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
         Statement st = null;
         ResultSet rs = null;
+        String query2 = "SELECT Community\n" +
+                        "FROM Student s, Homeroom h\n" +
+                        "WHERE s.Room_No = h.Room_No\n" +
+                        "AND S_ID = ";
         try{
             st = con.createStatement();
             rs = st.executeQuery("SELECT * FROM Student WHERE S_ID LIKE '" 
@@ -2789,7 +2801,7 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             }
         }
         model.setRowCount(0);
-        Object row[] = new Object[6];
+        Object row[] = new Object[8];
         for(int i = 0; i < list.size(); i++){
             try{
                 String studentToCount = list.get(i).getS_ID();
@@ -2805,6 +2817,66 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             catch(Exception e){
                 System.out.println("Error with count");
                 } 
+            try{
+                String studentToCount = list.get(i).getS_ID();
+                st = con.createStatement();
+                rs = st.executeQuery(query2 + " " + studentToCount);
+                if(rs.first()){
+                    row[6] = rs.getString("Community");
+                }
+            }
+            catch(Exception e){
+                System.out.println("error with community");
+            }
+            finally{
+                if(rs != null) try {
+                    rs.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if(st != null) try {
+                    st.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            try{
+                String sid = list.get(i).getS_ID();
+                String query3 = "Select MaxTypeGroups.S_ID, Type \n" +
+                        "From\n" +
+                        "(SELECT S_ID, Type, COUNT(Type) as COUNT_T\n" +
+                        "FROM Focus_Report\n" +
+                        "WHERE S_ID = " + sid +
+                        " GROUP BY S_ID, Type) AS MaxTypeGroups, (SELECT S_ID, MAX(COUNT_T) as MAX_COUNT\n" +
+                        "	FROM (SELECT S_ID, Type, count(Type) as COUNT_T\n" +
+                        "		FROM Focus_Report\n" +
+                        "		GROUP BY S_ID, Type) AS A\n" +
+                        "	GROUP BY S_ID) AS StudentsMaxCount\n" +
+                        "WHERE MaxTypeGroups.S_ID = StudentsMaxCount.S_ID AND COUNT_T = MAX_COUNT;";
+                st = con.createStatement();
+                rs = st.executeQuery(query3);
+                if(!rs.first()){
+                    row[7] = " ";
+                }
+                else if(rs.first()){
+                    row[7] = rs.getString("Type");
+                }
+            }
+            catch(Exception e){
+                
+            }
+            finally{
+                if(rs != null) try {
+                    rs.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if(st != null) try {
+                    st.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
             row[0] = list.get(i).getS_ID();
             row[1] = list.get(i).getF_Name();
             row[2] = list.get(i).getL_Name();
@@ -2833,10 +2905,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             System.out.println("Error");
         }
         model.setRowCount(0);
-        Object row[] = new Object[5];
+        Object row[] = new Object[6];
         for(int i = 0; i < list.size(); i++){
+            String teacherToCount = list.get(i).getT_ID();
             try{
-                String teacherToCount = list.get(i).getT_ID();
                 Statement st = con.createStatement();
                 ResultSet count = st.executeQuery("SELECT COUNT(T_ID) AS COUNT_TID " +
                                                 "FROM Focus_Report " +
@@ -2847,7 +2919,29 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             }
             catch(Exception e){
                 System.out.println("Error with count");
-                } 
+                }
+            try{
+                Statement st2 = con.createStatement();
+                ResultSet rs = st2.executeQuery("Select MaxTypeGroups.T_ID, Type From\n" +
+                                        "(SELECT T_ID, Type, COUNT(Type) as COUNT_T\n" +
+                                        "FROM Focus_Report\n" +
+                                        "WHERE T_ID = " + teacherToCount +
+                                        " GROUP BY T_ID, Type) AS MaxTypeGroups, (SELECT T_ID, MAX(COUNT_T) as MAX_COUNT\n" +
+                                        "FROM (SELECT T_ID, Type, count(Type) as COUNT_T\n" +
+                                        "            FROM Focus_Report                                        GROUP BY T_ID, Type) AS A\n" +
+                                        "        GROUP BY T_ID) AS TeachersMaxCount\n" +
+                                        "WHERE MaxTypeGroups.T_ID = TeachersMaxCount.T_ID AND COUNT_T = MAX_COUNT;");
+                if(!rs.first()){
+                    row[5] = " ";
+                }
+                else if(rs.first()){
+                    row[5] = rs.getString("Type");
+                }
+            }
+            catch(Exception e){
+                System.out.println("teacher type not working");
+            }
+            
             row[0] = list.get(i).getT_ID();
             row[1] = list.get(i).getF_Name();
             row[2] = list.get(i).getL_Name();
@@ -2910,8 +3004,10 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             System.out.println("Error");
         }
         model.setRowCount(0);
-        Object row[] = new Object[9];
+        Object row[] = new Object[10];
         for(int i = 0; i < list.size(); i++){
+            Statement st = null;
+            ResultSet rs = null;
             row[0] = list.get(i).getS_ID();
             row[1] = list.get(i).getT_ID();
             row[2] = list.get(i).getTime_In();
@@ -2921,6 +3017,37 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             row[6] = list.get(i).getStudent_Response();
             row[7] = list.get(i).getType();
             row[8] = list.get(i).getComm_Leader_Debrief();
+            String query = "Select  \n" +
+                        "CASE quarter(Date)\n" +
+                        "    WHEN 1 THEN \"3rd Quarter\"\n" +
+                        "    WHEN 2 THEN \"4th Quarter\"\n" +
+                        "    WHEN 3 THEN \"1st Quarter\"\n" +
+                        "    WHEN 4 THEN \"2nd Quarter\"\n" +
+                        "END as Quarter\n" +
+                        "FROM Focus_Report\n" +
+                        "WHERE S_ID = ";
+            try{
+                st = con.createStatement();
+                rs = st.executeQuery(query + list.get(i).getS_ID());
+                if(rs.first()){
+                    row[9] = rs.getString("Quarter");
+                }
+            }
+            catch(Exception e){
+                
+            }
+            finally{
+                if(rs != null) try {
+                    rs.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if(st != null) try {
+                    st.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
             model.addRow(row);
         }
     }//GEN-LAST:event_focusReportSearchButtonActionPerformed
@@ -4603,10 +4730,12 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
     }//GEN-LAST:event_studentIdDisplayTextFieldKeyPressed
 
     private void HomeroomSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HomeroomSearchButtonActionPerformed
+        ArrayList<Homeroom> list = new ArrayList<>();
         Statement st = null;
         ResultSet rs = null;
         DefaultTableModel model = (DefaultTableModel) homeroomTable.getModel();
         model.setRowCount(0);
+        
         
         try{
             st = con.createStatement();
@@ -4615,14 +4744,49 @@ public class DatabaseGUI2 extends javax.swing.JFrame {
             while(rs.next()){
                 String Room_No = rs.getString(1);
                 String T_ID = rs.getString(2);
-                String Commnunity = rs.getString(3);
+                String Community = rs.getString(3);
+                Homeroom homeroom = new Homeroom(Room_No, T_ID, Community);
+                list.add(homeroom);
+                                  
+            }
                 
-                Object[] content = {Room_No, T_ID, Commnunity};
-                model.addRow(content);                      
-            }    
         } catch(Exception e){ 
             e.printStackTrace();
         }  
+        Object[] row = new Object[4];
+        for(int i = 0; i < list.size(); i++){
+            try{
+                st = con.createStatement();
+                rs = st.executeQuery("SELECT COUNT(Room_No) AS COUNT_R " +
+                                            "FROM Focus_Report f, Student s " +
+                                            "WHERE f.S_ID = s.S_ID " + 
+                                            "AND Room_No = " + list.get(i).getRoomNo());
+                if(rs.first()){
+                    row[3] = rs.getString("COUNT_R");
+                }   
+            }   
+            catch(Exception e){
+            
+            }
+            
+            finally{
+            if(rs != null) try {
+                rs.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if(st != null) try {
+                st.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseGUI2.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            }
+            
+            row[0] = list.get(i).getRoomNo();
+            row[1] = list.get(i).getTID();
+            row[2] = list.get(i).getCommunity();
+            model.addRow(row);
+        }
     }//GEN-LAST:event_HomeroomSearchButtonActionPerformed
 
     private void firstNameDisplayTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_firstNameDisplayTextFieldKeyPressed
